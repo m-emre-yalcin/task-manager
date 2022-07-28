@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
+import draggable from "vuedraggable";
 import IconDone from "../components/icons/IconDone.vue";
 import IconClose from "../components/icons/IconClose.vue";
 import IconPlus from "../components/icons/IconPlus.vue";
@@ -23,6 +24,7 @@ const tabs = ref([
 ]);
 const dropdown = ref(false);
 const project = ref({
+  id: 1,
   title: "Project 1",
   priority: 2,
   completed: false,
@@ -85,6 +87,16 @@ const project = ref({
 });
 const openedTask: typeof project.value.tasks[0] | undefined = ref(null);
 
+const drag = ref(false);
+const dragOptions = computed(() => {
+  return {
+    animation: 200,
+    group: "description",
+    disabled: false,
+    ghostClass: "ghost",
+  };
+});
+
 // methods
 const sectionTasks = (id: number) => {
   return project.value.tasks.filter((task) => task.section === id);
@@ -112,7 +124,7 @@ const removeTab = (id: number) => {
 </script>
 
 <template>
-  <div class="task-manager">
+  <div class="task-manager-container">
     <!-- tabs and options -->
     <header>
       <!-- contains all opened projects or settings -->
@@ -164,74 +176,98 @@ const removeTab = (id: number) => {
 
     <!-- main content -- kanban -->
     <main>
-      <div class="kanban">
-        <ul class="section" v-for="{ id } in project.sections" :key="id">
-          <li
-            v-for="task in sectionTasks(id)"
-            :key="task.id"
-            @click="openedTask = task"
+      <draggable
+        v-model="project.sections"
+        v-bind="dragOptions"
+        item-key="id"
+        class="kanban"
+        group="section"
+        handle=".section"
+        tag="transition-group"
+        :component-data="{
+          tag: 'div',
+          type: 'transition-group',
+          name: !drag ? 'flip-list' : null,
+        }"
+        @start="drag = true"
+        @end="drag = false"
+      >
+        <template #item="{ element }">
+          <draggable
+            tag="ul"
+            class="section"
+            :list="sectionTasks(element.id)"
+            group="tasks"
           >
-            <span>{{ task.title }}</span>
-            <span class="state">
-              <IconDone v-show="task.completed" />
-            </span>
+            <template #item="{ element }">
+              <li @click="openedTask = element" class="task">
+                <span>{{ element.title }}</span>
+                <span class="state">
+                  <IconDone v-show="element.completed" />
+                </span>
 
-            <Teleport to="body">
-              <div class="overlay" v-if="openedTask === task">
-                <div class="task-container">
-                  <header class="row">
-                    <h1 class="title" :id="task.title">
-                      {{ task.title }}
-                    </h1>
+                <Teleport to="body">
+                  <div class="overlay" v-if="openedTask === element">
+                    <div class="task-container">
+                      <header class="row">
+                        <h1 class="title" :id="element.title">
+                          {{ element.title }}
+                        </h1>
 
-                    <div class="state">
-                      <IconClose />
-                    </div>
-                  </header>
-
-                  <main class="row">
-                    <textarea
-                      :name="`description of ${task.title}`"
-                      :id="`description-${task.id}`"
-                      cols="30"
-                      rows="10"
-                    />
-                  </main>
-
-                  <footer class="row">
-                    <div class="heading">
-                      <h3>Notes</h3>
-                    </div>
-
-                    <ul class="list">
-                      <li v-for="note in task.notes" :key="note.id">
-                        <div class="user" :title="note.created_by.name">
-                          <img
-                            :src="'@/assets/images/user-placeholder.png'"
-                            width="25"
-                            height="25"
-                          />
+                        <div class="state">
+                          <IconClose />
                         </div>
-                        <div class="text">{{ note.text }}</div>
-                      </li>
-                    </ul>
-                  </footer>
-                </div>
-              </div>
-            </Teleport>
-          </li>
-        </ul>
-      </div>
+                      </header>
+
+                      <main class="row">
+                        <textarea
+                          :name="`description of ${element.title}`"
+                          :id="`description-${element.id}`"
+                          cols="30"
+                          rows="10"
+                        />
+                      </main>
+
+                      <footer class="row">
+                        <div class="heading">
+                          <h3>Notes</h3>
+                        </div>
+
+                        <ul class="list">
+                          <li v-for="note in element.notes" :key="note.id">
+                            <div class="user" :title="note.created_by.name">
+                              <img
+                                :src="'@/assets/images/user-placeholder.png'"
+                                width="25"
+                                height="25"
+                              />
+                            </div>
+                            <div class="text">{{ note.text }}</div>
+                          </li>
+                        </ul>
+                      </footer>
+                    </div>
+                  </div>
+                </Teleport>
+              </li>
+            </template>
+          </draggable>
+        </template>
+      </draggable>
     </main>
   </div>
 </template>
 
 <style lang="scss">
+$header-height: 40px;
+$main-height: calc(100vh - #{$header-height});
+
 header {
   background-color: rgb(218, 218, 218);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: $header-height;
 
   .tabs {
     display: flex;
@@ -242,7 +278,6 @@ header {
       overflow-x: auto;
       display: flex;
       flex-direction: row;
-      height: 40px;
 
       .tab {
         display: flex;
@@ -356,19 +391,40 @@ main {
   background-color: rgb(220, 220, 220);
   padding: 1rem;
   overflow: auto;
+  height: $main-height;
 
   .kanban {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 300px);
-    white-space: nowrap;
+    grid-auto-flow: column;
+    grid-auto-columns: 270px;
+    height: 100%;
     gap: 10px;
-    width: 100vw;
 
     .section {
       display: flex;
+      flex-direction: column;
       flex: 1;
       border-radius: 4px;
       background-color: white;
+      height: inherit;
+
+      .task {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 4px;
+        display: flex;
+        justify-content: space-between;
+
+        &:hover {
+          background-color: rgb(241, 241, 241);
+        }
+        .state {
+          svg {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
     }
   }
 }
@@ -376,6 +432,32 @@ main {
 
 <style>
 .btn {
+  cursor: pointer;
+}
+</style>
+
+
+<style>
+.button {
+  margin-top: 35px;
+}
+.flip-list-move {
+  transition: transform 0.5s;
+}
+.no-move {
+  transition: transform 0s;
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
+.list-group {
+  min-height: 20px;
+}
+.list-group-item {
+  cursor: move;
+}
+.list-group-item i {
   cursor: pointer;
 }
 </style>
