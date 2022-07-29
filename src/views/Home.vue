@@ -33,75 +33,66 @@ const project = ref({
     {
       id: 1,
       label: "defined",
-    },
-    {
-      id: 2,
-      label: "idle",
-    },
-    {
-      id: 3,
-      label: "in progress",
-    },
-    {
-      id: 4,
-      label: "done",
-    },
-  ],
-  tasks: [
-    {
-      id: 1,
-      title: "Task 1",
-      completed: false,
-      section: 1,
-      notes: [
+      tasks: [
         {
           id: 1,
-          text: "note 1 about this task",
-          created_by: user,
+          title: "Task 1",
+          completed: false,
+          section: 1,
+          notes: [
+            {
+              id: 1,
+              text: "note 1 about this task",
+              created_by: user,
+            },
+          ],
+        },
+        {
+          id: 2,
+          title: "Task 2",
+          completed: false,
+          section: 1,
+          notes: [],
         },
       ],
     },
     {
       id: 2,
-      title: "Task 2",
-      completed: false,
-      section: 1,
-      notes: [],
+      label: "idle",
+      tasks: [],
     },
     {
       id: 3,
-      title: "Task 3",
-      completed: false,
-      section: 3,
-      notes: [],
+      label: "in progress",
+      tasks: [
+        {
+          id: 3,
+          title: "Task 3",
+          completed: false,
+          section: 3,
+          notes: [],
+        },
+      ],
     },
     {
       id: 4,
-      title: "Task 4",
-      completed: true,
-      section: 4,
-      notes: [],
+      label: "done",
+      tasks: [
+        {
+          id: 4,
+          title: "Task 4",
+          completed: true,
+          section: 4,
+          notes: [],
+        },
+      ],
     },
   ],
   tags: ["venture", "work"],
 });
 const openedTask: typeof project.value.tasks[0] | undefined = ref(null);
 
-const drag = ref(false);
-const dragOptions = computed(() => {
-  return {
-    animation: 200,
-    group: "description",
-    disabled: false,
-    ghostClass: "ghost",
-  };
-});
-
 // methods
-const sectionTasks = (id: number) => {
-  return project.value.tasks.filter((task) => task.section === id);
-};
-
 const addTab = () => {
   const id = tabs.value.length + 1;
 
@@ -178,80 +169,81 @@ const removeTab = (id: number) => {
     <main>
       <draggable
         v-model="project.sections"
-        v-bind="dragOptions"
+        :animation="200"
         item-key="id"
         class="kanban"
-        group="section"
-        handle=".section"
-        tag="transition-group"
-        :component-data="{
-          tag: 'div',
-          type: 'transition-group',
-          name: !drag ? 'flip-list' : null,
-        }"
-        @start="drag = true"
-        @end="drag = false"
+        group="sections"
+        handler=".section"
       >
         <template #item="{ element }">
-          <draggable
-            tag="ul"
-            class="section"
-            :list="sectionTasks(element.id)"
-            group="tasks"
-          >
-            <template #item="{ element }">
-              <li @click="openedTask = element" class="task">
-                <span>{{ element.title }}</span>
-                <span class="state">
-                  <IconDone v-show="element.completed" />
-                </span>
+          <div>
+            <header class="head">
+              <h2>{{ element.label }}</h2>
+              <hr />
+            </header>
 
-                <Teleport to="body">
-                  <div class="overlay" v-if="openedTask === element">
-                    <div class="task-container">
-                      <header class="row">
-                        <h1 class="title" :id="element.title">
-                          {{ element.title }}
-                        </h1>
+            <draggable
+              v-model="element.tasks"
+              :animation="200"
+              tag="ul"
+              item-key="id"
+              class="section"
+              group="tasks"
+            >
+              <template #item="{ element }">
+                <li @click="openedTask = element" class="task">
+                  <span>{{ element.title }}</span>
+                  <span class="state">
+                    <IconDone v-show="element.completed" />
+                  </span>
 
-                        <div class="state">
-                          <IconClose />
-                        </div>
-                      </header>
+                  <Teleport to="body">
+                    <div class="overlay" v-if="openedTask === element">
+                      <div class="task-container">
+                        <header class="row">
+                          <h1 class="title" :id="element.title">
+                            {{ element.title }}
+                          </h1>
 
-                      <main class="row">
-                        <textarea
-                          :name="`description of ${element.title}`"
-                          :id="`description-${element.id}`"
-                          cols="30"
-                          rows="10"
-                        />
-                      </main>
+                          <div class="state">
+                            <IconClose />
+                          </div>
+                        </header>
 
-                      <footer class="row">
-                        <div class="heading">
-                          <h3>Notes</h3>
-                        </div>
+                        <main class="row">
+                          <textarea
+                            :name="`description of ${element.title}`"
+                            :id="`description-${element.id}`"
+                            cols="30"
+                            rows="10"
+                          />
+                        </main>
 
-                        <ul class="list">
-                          <li v-for="note in element.notes" :key="note.id">
-                            <div class="user" :title="note.created_by.name">
-                              <img
-                                :src="'@/assets/images/user-placeholder.png'"
-                                width="25"
-                                height="25"
-                              />
-                            </div>
-                            <div class="text">{{ note.text }}</div>
-                          </li>
-                        </ul>
-                      </footer>
+                        <footer class="row">
+                          <div class="heading">
+                            <h3>Notes</h3>
+                          </div>
+
+                          <ul class="list">
+                            <li v-for="note in element.notes" :key="note.id">
+                              <div class="user" :title="note.created_by.name">
+                                <img
+                                  :src="'@/assets/images/user-placeholder.png'"
+                                  width="25"
+                                  height="25"
+                                />
+                              </div>
+                              <div class="text">{{ note.text }}</div>
+                            </li>
+                          </ul>
+                        </footer>
+                      </div>
                     </div>
-                  </div>
-                </Teleport>
-              </li>
-            </template>
-          </draggable>
+                  </Teleport>
+                </li>
+              </template>
+            </draggable>
+          </div>
         </template>
       </draggable>
     </main>
@@ -400,13 +392,17 @@ main {
     height: 100%;
     gap: 10px;
 
+    header {
+      height: 40px;
+    }
+
     .section {
       display: flex;
       flex-direction: column;
       flex: 1;
       border-radius: 4px;
       background-color: white;
-      height: inherit;
+      height: calc(100% - 40px);
 
       .task {
         border: 1px solid #ccc;
