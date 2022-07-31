@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { storeToRefs } from "pinia";
 import { useHomeStore } from "../stores/home";
 
-const activeTask = {};
-// const route = useRoute();
-// const store = useHomeStore();
-// const { openedTasks } = storeToRefs(store);
+const route = useRoute();
+const store = useHomeStore();
+const activeTask = ref<any>({});
 
-// onMounted(() => {
-//   const activeTask = store.getActiveTask(route.query.id);
-// });
+onMounted(() => {
+  activeTask.value = store.getActiveTask(Number(route.query.id));
+});
 </script>
 
 <template>

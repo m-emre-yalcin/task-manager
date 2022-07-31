@@ -11,4 +11,9 @@
       "path": "./tsconfig.vitest.json"
     }
   ],
+  "compilerOptions": {
+    "types": [
+      "pinia-plugin-persist"
+    ]
+  },
 }

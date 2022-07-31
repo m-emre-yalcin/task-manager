@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import type { User, Task, Section, Project } from '@/types'
 
 export const useHomeStore = defineStore({
   id: 'home',
@@ -125,7 +126,7 @@ export const useHomeStore = defineStore({
 
       this.tabs.splice(index, 1)
     },
-    addSection(project: any) {
+    addSection(project: Project) {
       project.sections.push({
         id: Date.now(),
         label: "New section",
@@ -133,13 +134,13 @@ export const useHomeStore = defineStore({
       });
     },
     removeSection() { return },
-    addTask(section: any) {
+    addTask(section: Section) {
       if (this.getActiveTab) {
         section.tasks.push({
           id: Date.now(),
           title: 'New task',
           completed: false,
-          section: section.id,
+          section: Number(section.id),
           notes: []
         })
 
@@ -149,7 +150,8 @@ export const useHomeStore = defineStore({
       throw new Error('There is no active tab')
     },
     removeTask() { return },
-    openTask(task: any) {
+    updateTask() { return },
+    openTask(task: Task) {
       this.openedTasks.push(task)
 
       window.open(
@@ -172,5 +174,14 @@ export const useHomeStore = defineStore({
       return {}
     },
     closeTask() { return }
+  },
+  // Persistent Store Details: https://seb-l.github.io/pinia-plugin-persist
+  persist: {
+    enabled: true,
+    strategies: [
+      {
+        storage: localStorage
+      }
+    ]
   }
 })
