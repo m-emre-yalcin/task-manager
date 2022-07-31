@@ -1,141 +1,16 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useHomeStore } from "../stores/home";
 import draggable from "vuedraggable";
+
 import IconDone from "../components/icons/IconDone.vue";
 import IconClose from "../components/icons/IconClose.vue";
 import IconPlus from "../components/icons/IconPlus.vue";
 
-const user = ref({
-  id: 1,
-  name: "Emre Yalçın",
-  avatar: null,
-});
+const store = useHomeStore();
+const { tabs, getActiveTab } = storeToRefs(store);
 const dropdown = ref(false);
-const tabs = ref([
-  {
-    id: 1,
-    pinned: true,
-    title: "All",
-    sections: [],
-  },
-  {
-    id: 2,
-    pinned: false,
-    title: "Project 1",
-    priority: 2,
-    completed: false,
-    archieved: false,
-    sections: [
-      {
-        id: 1,
-        label: "defined",
-        tasks: [
-          {
-            id: 1,
-            title: "Task 1",
-            completed: false,
-            section: 1,
-            notes: [
-              {
-                id: 1,
-                text: "note 1 about this task",
-                created_by: user,
-              },
-            ],
-          },
-          {
-            id: 2,
-            title: "Task 2",
-            completed: false,
-            section: 1,
-            notes: [],
-          },
-        ],
-      },
-      {
-        id: 2,
-        label: "idle",
-        tasks: [],
-      },
-      {
-        id: 3,
-        label: "in progress",
-        tasks: [
-          {
-            id: 3,
-            title: "Task 3",
-            completed: false,
-            section: 3,
-            notes: [],
-          },
-        ],
-      },
-      {
-        id: 4,
-        label: "done",
-        tasks: [
-          {
-            id: 4,
-            title: "Task 4",
-            completed: true,
-            section: 4,
-            notes: [],
-          },
-        ],
-      },
-    ],
-    tags: ["venture", "work"],
-  },
-]);
-const activeTabIndex = ref(1);
-const openedTask: any = ref(null);
-
-// methods
-const addTab = () => {
-  const id = tabs.value.length + 1;
-
-  tabs.value.push({
-    id,
-    pinned: false,
-    title: "New Tab " + id,
-    priority: 2,
-    completed: false,
-    archieved: false,
-    sections: [],
-    tags: [],
-  });
-  activeTabIndex.value = tabs.value.length - 1;
-};
-
-const selectTab = (index: number) => {
-  activeTabIndex.value = index;
-};
-
-const removeTab = (index: number) => {
-  if (activeTabIndex.value == index) {
-    activeTabIndex.value = 0;
-  }
-
-  tabs.value.splice(index, 1);
-};
-
-const addTask = (section: any) => {
-  section.tasks.push({
-    id: Date.now(),
-    title: "New task",
-    completed: false,
-    section: section.id,
-    notes: [],
-  });
-};
-
-const addSection = (project: any) => {
-  project.sections.push({
-    id: Date.now(),
-    label: "New section",
-    tasks: [],
-  });
-};
 </script>
 
 <template>
@@ -157,9 +32,9 @@ const addSection = (project: any) => {
               :class="{
                 tab: true,
                 pinned: element.pinned,
-                active: activeTabIndex === index,
+                active: element.activated,
               }"
-              @click="selectTab(index)"
+              @click="store.switchTab(index)"
             >
               <div class="left">
                 <span class="text">{{ element.title }}</span>
@@ -167,7 +42,7 @@ const addSection = (project: any) => {
               <div
                 class="right"
                 v-show="element.pinned === false"
-                @click="removeTab(index)"
+                @click="store.removeTab(index)"
               >
                 <span class="btn close">
                   <IconClose />
@@ -177,7 +52,7 @@ const addSection = (project: any) => {
           </template>
         </draggable>
 
-        <div class="btn add-project" @click="addTab()">
+        <div class="btn add-project" @click="store.addTab()">
           <IconPlus />
         </div>
       </div>
@@ -207,97 +82,59 @@ const addSection = (project: any) => {
 
     <!-- main content -- kanban -->
     <main>
-      <draggable
-        v-model="tabs[activeTabIndex].sections"
-        :animation="200"
-        item-key="id"
-        class="kanban"
-        group="sections"
-        handle=".section-container"
-      >
-        <template #item="{ element }">
-          <div class="section-container">
-            <header class="head">
-              <h2>{{ element.label }}</h2>
-              <div class="btn add" @click="addTask(element)">
-                <span> Add Task </span>
-                <IconPlus />
-              </div>
-            </header>
+      <template v-if="store.getActiveTab">
+        <draggable
+          :list="store.getActiveTab?.sections"
+          :animation="200"
+          item-key="id"
+          class="kanban"
+          group="sections"
+          handle=".section-container"
+        >
+          <template #item="{ element }">
+            <div class="section-container">
+              <header class="head">
+                <h2>{{ element.label }}</h2>
+                <div class="btn add" @click="store.addTask(element)">
+                  <span> Add Task </span>
+                  <IconPlus />
+                </div>
+              </header>
 
-            <draggable
-              v-model="element.tasks"
-              :animation="200"
-              tag="ul"
-              item-key="id"
-              class="section"
-              group="tasks"
-            >
-              <template #item="{ element }">
-                <li @click="openedTask = element" class="task">
-                  <span>{{ element.title }}</span>
-                  <span class="state">
-                    <IconDone v-show="element.completed" />
-                  </span>
+              <draggable
+                v-model="element.tasks"
+                :animation="200"
+                tag="ul"
+                item-key="id"
+                class="section"
+                group="tasks"
+              >
+                <template #item="{ element }">
+                  <li @click="store.openTask(element)" class="task">
+                    <span>{{ element.title }}</span>
+                    <span class="state">
+                      <IconDone v-show="element.completed" />
+                    </span>
+                  </li>
+                </template>
+              </draggable>
+            </div>
+          </template>
 
-                  <Teleport to="body">
-                    <div class="overlay" v-if="openedTask === element">
-                      <div class="task-container">
-                        <header class="row">
-                          <h1 class="title" :id="element.title">
-                            {{ element.title }}
-                          </h1>
+          <template #footer>
+            <div class="btn add" @click="store.addSection(getActiveTab)">
+              <span> Add Section </span>
+              <IconPlus />
+            </div>
+          </template>
+        </draggable>
+      </template>
 
-                          <div class="state">
-                            <IconClose />
-                          </div>
-                        </header>
-
-                        <main class="row">
-                          <textarea
-                            :name="`description of ${element.title}`"
-                            :id="`description-${element.id}`"
-                            cols="30"
-                            rows="10"
-                          />
-                        </main>
-
-                        <footer class="row">
-                          <div class="heading">
-                            <h3>Notes</h3>
-                          </div>
-
-                          <ul class="list">
-                            <li v-for="note in element.notes" :key="note.id">
-                              <div class="user" :title="note.created_by.name">
-                                <img
-                                  :src="'@/assets/images/user-placeholder.png'"
-                                  width="25"
-                                  height="25"
-                                />
-                              </div>
-                              <div class="text">
-                                {{ note.text }}
-                              </div>
-                            </li>
-                          </ul>
-                        </footer>
-                      </div>
-                    </div>
-                  </Teleport>
-                </li>
-              </template>
-            </draggable>
-          </div>
-        </template>
-
-        <template #footer>
-          <div class="btn add" @click="addSection(tabs[activeTabIndex])">
-            <span> Add Section </span>
-            <IconPlus />
-          </div>
-        </template>
-      </draggable>
+      <template v-else>
+        <div class="welcome-container">
+          <h1>Welcome to task manager!</h1>
+        </div>
+      </template>
     </main>
   </div>
 </template>
@@ -518,6 +355,15 @@ main {
   overflow: auto;
   height: $main-height;
   background-color: $kanban-bg;
+
+  .welcome-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    height: inherit;
+    user-select: none;
+  }
 
   .kanban {
     display: grid;

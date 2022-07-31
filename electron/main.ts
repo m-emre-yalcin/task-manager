@@ -1,6 +1,10 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
-const path = require('path')
+const { app, BrowserWindow, ipcMain } = require('electron')
+const { join } = require('path')
+const installExtension = require('electron-devtools-installer')
+const { VUEJS_DEVTOOLS } = installExtension
+
+const isDevelopment = process.env.NODE_ENV !== 'production'
 
 const createWindow = () => {
   // Create the browser window.
@@ -8,12 +12,16 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: join(__dirname, 'preload.ts')
     }
   })
 
-  // and load the index.html of the app.
-  mainWindow.loadURL('http://127.0.0.1:5173')
+  if (isDevelopment) {
+    mainWindow.loadURL('http://127.0.0.1:5173')
+  }
+  else {
+    mainWindow.loadFile('dist/index.html')
+  }
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -30,6 +38,17 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+})
+
+app.on('ready', async () => {
+  if (isDevelopment && !process.env.IS_TEST) {
+    // Install Vue Devtools
+    try {
+      await installExtension(VUEJS_DEVTOOLS)
+    } catch (e) {
+      console.error('Vue Devtools failed to install:', e.toString())
+    }
+  }
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
