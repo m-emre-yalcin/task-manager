@@ -16,9 +16,9 @@ const dropdown = ref(false);
 <template>
   <div class="task-manager-container">
     <!-- tabs and options -->
-    <header>
+    <header class="draggable">
       <!-- contains all opened projects or settings -->
-      <div class="tabs">
+      <div class="tabs" style="z-index: 10" @drag.stop.prevent>
         <draggable
           :list="tabs"
           :animation="200"
@@ -57,7 +57,7 @@ const dropdown = ref(false);
         </div>
       </div>
 
-      <div class="user" tabindex="-1" @blur="dropdown = false">
+      <div class="user" tabindex="-1" @blur="dropdown = false" v-show="false">
         <div class="img-container" @click="dropdown = !dropdown">
           <!-- spin while saving -->
           <div class="saving-spinner" :class="{ active: dropdown }" />
@@ -94,7 +94,13 @@ const dropdown = ref(false);
           <template #item="{ element }">
             <div class="section-container">
               <header class="head">
-                <h2>{{ element.label }}</h2>
+                <h2>
+                  <input
+                    type="text"
+                    v-model="element.label"
+                    placeholder="Section label"
+                  />
+                </h2>
                 <div class="btn add" @click="store.addTask(element)">
                   <span> Add Task </span>
                   <IconPlus />
@@ -139,11 +145,17 @@ const dropdown = ref(false);
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $header-height: 40px;
 $main-height: calc(100vh - #{$header-height});
 $kanban-bg: rgba(255, 255, 255, 1);
 $border-color: rgb(236, 236, 236);
+
+.draggable {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-app-region: drag;
+}
 
 header {
   display: flex;
@@ -388,11 +400,20 @@ main {
         box-shadow: 0 2px 2px $border-color;
 
         h2 {
-          font-size: 1rem;
-          text-indent: 2px;
+          padding: 3px;
+          display: flex;
           background-color: darken($border-color, 5%);
-          padding: 2px 4px;
           border-radius: 4px;
+
+          input {
+            padding: 2px 4px;
+            background-color: unset;
+            font-size: 1rem;
+            text-indent: 2px;
+            width: 130px;
+            outline: none;
+            border: none;
+          }
         }
 
         .btn.add {

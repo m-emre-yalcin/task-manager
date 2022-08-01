@@ -34,6 +34,7 @@ export const useHomeStore = defineStore({
                 id: 1,
                 title: "Task 1",
                 completed: false,
+                description: '',
                 section: 1,
                 notes: [
                   {
@@ -47,6 +48,7 @@ export const useHomeStore = defineStore({
                 id: 2,
                 title: "Task 2",
                 completed: false,
+                description: '',
                 section: 1,
                 notes: [],
               },
@@ -65,6 +67,7 @@ export const useHomeStore = defineStore({
                 id: 3,
                 title: "Task 3",
                 completed: false,
+                description: '',
                 section: 3,
                 notes: [],
               },
@@ -78,6 +81,7 @@ export const useHomeStore = defineStore({
                 id: 4,
                 title: "Task 4",
                 completed: true,
+                description: '',
                 section: 4,
                 notes: [],
               },
@@ -87,7 +91,7 @@ export const useHomeStore = defineStore({
         tags: ["venture", "work"],
       },
     ],
-    openedTasks: []
+    activeTask: {} as Task
   }),
   getters: {
     getActiveTab: (state) => {
@@ -140,6 +144,7 @@ export const useHomeStore = defineStore({
           id: Date.now(),
           title: 'New task',
           completed: false,
+          description: '',
           section: Number(section.id),
           notes: []
         })
@@ -152,35 +157,34 @@ export const useHomeStore = defineStore({
     removeTask() { return },
     updateTask() { return },
     openTask(task: Task) {
-      this.openedTasks.push(task)
-
       window.open(
         window.location.origin + "/task/" + task.id,
         "_blank",
         "top=300,left=300,nodeIntegration=no"
       )
-
-      // save to ls for sustain multiple state
-      localStorage.setItem('openedTasks', JSON.stringify(this.openedTasks))
     },
-    getActiveTask(taskID: number) {
-      // get item from another tab
-      const openedTasks = localStorage.getItem('openedTasks')
+    closeTask() { return },
+    getActiveTask(id: number | undefined) {
+      const taskId = Number(id)
 
-      if (openedTasks && Array.isArray(openedTasks)) {
-        return openedTasks.find(task => task.id === taskID)
-      }
-
-      return {}
+      // Q(n3) complexity - needs performant way to get active task
+      this.tabs.find(tab => {
+        return tab.sections.find(section => {
+          return section.tasks.find(task => {
+            if (task.id === taskId) {
+              return this.activeTask = task
+            }
+          })
+        })
+      })
     },
-    closeTask() { return }
   },
   // Persistent Store Details: https://seb-l.github.io/pinia-plugin-persist
   persist: {
     enabled: true,
     strategies: [
       {
-        storage: localStorage
+        storage: localStorage, paths: ['tabs', 'user']
       }
     ]
   }

@@ -11,6 +11,12 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    // frame: false,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      color: '#3e3e3e',
+      symbolColor: '#fff'
+    },
     webPreferences: {
       preload: join(__dirname, 'preload.ts')
     }
