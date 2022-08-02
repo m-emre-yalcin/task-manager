@@ -9,89 +9,46 @@ export const useHomeStore = defineStore({
       name: "Emre Yalçın",
       avatar: null,
     },
-    tabs: [
-      {
-        id: 1,
-        pinned: true,
-        title: "All",
-        sections: [],
-        activated: false,
-      },
-      {
-        id: 2,
-        pinned: false,
-        title: "Project 1",
-        priority: 2,
-        completed: false,
-        archieved: false,
-        activated: false,
-        sections: [
-          {
-            id: 1,
-            label: "defined",
-            tasks: [
-              {
-                id: 1,
-                title: "Task 1",
-                completed: false,
-                description: '',
-                section: 1,
-                notes: [
-                  {
-                    id: 1,
-                    text: "note 1 about this task",
-                    created_by: { name: 'emre' },
-                  },
-                ],
-              },
-              {
-                id: 2,
-                title: "Task 2",
-                completed: false,
-                description: '',
-                section: 1,
-                notes: [],
-              },
-            ],
-          },
-          {
-            id: 2,
-            label: "idle",
-            tasks: [],
-          },
-          {
-            id: 3,
-            label: "in progress",
-            tasks: [
-              {
-                id: 3,
-                title: "Task 3",
-                completed: false,
-                description: '',
-                section: 3,
-                notes: [],
-              },
-            ],
-          },
-          {
-            id: 4,
-            label: "done",
-            tasks: [
-              {
-                id: 4,
-                title: "Task 4",
-                completed: true,
-                description: '',
-                section: 4,
-                notes: [],
-              },
-            ],
-          },
-        ],
-        tags: ["venture", "work"],
-      },
-    ],
-    activeTask: {} as Task
+    tabs: [] as Array<Project>,
+    activeTask: {} as Task,
+    actions: {
+      project: [
+        {
+          action: 'Rename'
+        },
+        {
+          action: 'Theme'
+        },
+        {
+          action: 'Archieve'
+        },
+        {
+          action: 'Delete'
+        }
+      ],
+      section: [
+        {
+          action: 'Rename'
+        },
+        {
+          action: 'Color'
+        },
+        {
+          action: 'Delete'
+        }
+      ],
+      task: [
+        {
+          action: 'Rename'
+        },
+        {
+          action: 'Complete'
+        },
+        {
+          action: 'Delete'
+        }
+      ]
+    }
   }),
   getters: {
     getActiveTab: (state) => {
@@ -119,6 +76,7 @@ export const useHomeStore = defineStore({
         activated: false,
         sections: [],
         tags: [],
+        color: 'p-white'
       })
       this.switchTab(this.tabs.length - 1)
     },
@@ -135,6 +93,7 @@ export const useHomeStore = defineStore({
         id: Date.now(),
         label: "New section",
         tasks: [],
+        color: 's-todo'
       });
     },
     removeSection() { return },
@@ -146,7 +105,7 @@ export const useHomeStore = defineStore({
           completed: false,
           description: '',
           section: Number(section.id),
-          notes: []
+          list: []
         })
 
         return
@@ -159,7 +118,8 @@ export const useHomeStore = defineStore({
     openTask(task: Task) {
       window.open(
         window.location.origin + "/task/" + task.id,
-        "_blank"
+        "_blank",
+        "width=450"
       )
     },
     closeTask() { return },
@@ -177,6 +137,9 @@ export const useHomeStore = defineStore({
         })
       })
     },
+    openActions(payload, e) {
+      return
+    }
   },
   // Persistent Store Details: https://seb-l.github.io/pinia-plugin-persist
   persist: {

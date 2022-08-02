@@ -3,15 +3,16 @@ import { onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useHomeStore } from "../stores/home";
-import IconPlus from "../components/icons/IconPlus.vue";
+import IconDone from "../components/icons/IconDone.vue";
+import IconTrash from "../components/icons/IconTrash.vue";
 
 const store = useHomeStore();
 const route = useRoute();
 const { activeTask } = storeToRefs(store);
 
-const addNote = () => {
-  activeTask.value.notes.unshift({
-    id: activeTask.value.notes.length + 1,
+const addSubTask = () => {
+  activeTask.value.list.unshift({
+    id: activeTask.value.list.length + 1,
     text: "",
     created_by: {
       id: 1,
@@ -34,9 +35,18 @@ onMounted(() => {
         <input type="text" v-model="activeTask.title" placeholder="Task name" />
       </h1>
 
-      <div class="state">
-        <IconClose />
-      </div>
+      <transition name="complete" mode="out-in">
+        <div
+          class="state done"
+          @click="activeTask.completed = false"
+          v-if="activeTask.completed"
+        >
+          <IconDone />
+        </div>
+        <div class="state" @click="activeTask.completed = true" v-else>
+          <IconDone />
+        </div>
+      </transition>
     </header>
 
     <main>
@@ -53,17 +63,21 @@ onMounted(() => {
 
       <div class="input-group">
         <div class="row center">
-          <label for="list">Notes</label>
+          <label for="list">Sub tasks</label>
 
-          <div class="btn add-note" @click="addNote()">
+          <div class="btn add-note" @click="addSubTask()">
             <span>Add</span>
             <IconPlus />
           </div>
         </div>
 
-        <ul class="list">
-          <li v-for="note in activeTask.notes" :key="note.id">
-            <div class="user" :title="note.created_by.name">
+        <TransitionGroup tag="ul" name="list" class="list">
+          <li
+            v-for="(subtask, i) in activeTask.list"
+            :key="subtask.id"
+            :class="{ done: subtask.completed }"
+          >
+            <div class="user" :title="subtask.created_by.name">
               <img
                 src="@/assets/images/user-placeholder.png"
                 width="30"
@@ -71,10 +85,30 @@ onMounted(() => {
               />
             </div>
             <div class="text">
-              <input type="text" v-model="note.text" placeholder="New note" />
+              <input
+                type="text"
+                v-model="subtask.text"
+                placeholder="New note"
+              />
             </div>
+
+            <div class="state trash" @click="activeTask.list.splice(i, 1)">
+              <IconTrash />
+            </div>
+            <transition name="complete" mode="out-in">
+              <div
+                class="state done"
+                @click="subtask.completed = false"
+                v-if="subtask.completed"
+              >
+                <IconDone />
+              </div>
+              <div class="state" @click="subtask.completed = true" v-else>
+                <IconDone />
+              </div>
+            </transition>
           </li>
-        </ul>
+        </TransitionGroup>
       </div>
     </main>
   </div>
@@ -95,6 +129,9 @@ onMounted(() => {
     }
   }
   header {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 8px;
     box-shadow: 0 0 4px rgb(234, 234, 234);
     h1.title {
       margin-left: 8px;
@@ -157,17 +194,30 @@ onMounted(() => {
       .list {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
         margin-top: 2rem;
 
         li {
           display: flex;
           align-items: center;
+          padding: 4px 6px;
+          background-color: rgb(255, 255, 255);
           border-bottom: 1px solid #eee;
+
+          &.done {
+            background-image: linear-gradient(
+              to right,
+              rgba(77, 215, 77, 0.188),
+              rgba(38, 158, 38, 0.113),
+              rgba(127, 197, 206, 0.201)
+            );
+            border-bottom: 1px solid rgb(212, 219, 214);
+          }
           .user {
             display: flex;
             img {
-              border-radius: 4px;
+              border-bottom: 1px solid #fefefe;
+              border-radius: 50%;
+              opacity: 0.8;
             }
           }
           .text {
@@ -178,6 +228,7 @@ onMounted(() => {
               padding: 5px;
               flex: 1;
               border-color: transparent;
+              background-color: transparent;
               outline: unset;
 
               &:focus {
@@ -185,8 +236,50 @@ onMounted(() => {
               }
             }
           }
+          .state {
+            margin-left: 6px;
+            svg {
+              width: 20px;
+              height: 20px;
+            }
+
+            &.trash {
+              padding: 2px;
+              &:hover {
+                background-color: rgb(251, 167, 167);
+              }
+              svg {
+                width: 16px;
+                height: 16px;
+              }
+            }
+          }
         }
       }
+    }
+  }
+  .state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgb(227, 251, 229);
+    }
+    &.done {
+      background-color: rgb(142, 231, 149);
+      svg,
+      svg path {
+        fill: rgb(251, 255, 246);
+      }
+    }
+
+    svg {
+      width: 26px;
+      height: 26px;
     }
   }
 }

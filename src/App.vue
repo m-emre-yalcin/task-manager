@@ -38,3 +38,29 @@ onBeforeMount(() => {
   />
   <RouterView />
 </template>
+
+<style>
+.list-move,
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.5s;
+}
+.list-leave-active {
+  position: absolute;
+  width: 100%;
+}
+.list-enter-from,
+.list-leave-to {
+  transform: translateY(-20px);
+  opacity: 0;
+}
+
+.complete-enter-active,
+.complete-leave-active {
+  transition: transform 0.1s ease;
+}
+.complete-enter-from,
+.complete-leave-to {
+  transform: scale(1.1);
+}
+</style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useHomeStore } from "../stores/home";
 import draggable from "vuedraggable";
@@ -7,10 +7,23 @@ import draggable from "vuedraggable";
 import IconDone from "../components/icons/IconDone.vue";
 import IconClose from "../components/icons/IconClose.vue";
 import IconPlus from "../components/icons/IconPlus.vue";
+import type { SubTask } from "../types/Task";
 
 const store = useHomeStore();
 const { tabs, getActiveTab } = storeToRefs(store);
-const dropdown = ref(false);
+
+const completeRatio = (list: Array<SubTask>) => {
+  return (
+    (list && list.filter((item) => item.completed).length / list.length) * 100 +
+    "%"
+  );
+};
+const limitText = (text: string, limit: number) => {
+  if (text.length > limit) {
+    return text.slice(0, 100) + "...";
+  }
+  return text;
+};
 </script>
 
 <template>
@@ -34,7 +47,13 @@ const dropdown = ref(false);
                 pinned: element.pinned,
                 active: element.activated,
               }"
+              :style="
+                element.activated && {
+                  background: `var(--${getActiveTab?.color}-color)`,
+                }
+              "
               @click="store.switchTab(index)"
+              @click.right="store.openActions({ project: element }, $event)"
             >
               <div class="left">
                 <span class="text">{{ element.title }}</span>
@@ -59,34 +78,43 @@ const dropdown = ref(false);
     </header>
 
     <!-- main content -- kanban -->
-    <main>
-      <template v-if="store.getActiveTab">
+    <main
+      :style="{
+        background: `var(--${getActiveTab?.color}-color)`,
+      }"
+    >
+      <template v-if="getActiveTab">
         <draggable
-          :list="store.getActiveTab?.sections"
+          :list="getActiveTab?.sections"
           :animation="200"
           item-key="id"
           class="kanban"
           group="sections"
           handle=".section-container"
         >
-          <template #item="{ element }">
-            <div class="section-container">
+          <template #item="section">
+            <div
+              class="section-container"
+              @click.right="
+                store.openActions({ section: section.element }, $event)
+              "
+            >
               <header class="head">
                 <h2>
                   <input
                     type="text"
-                    v-model="element.label"
+                    v-model="section.element.label"
                     placeholder="Section label"
                   />
                 </h2>
-                <div class="btn add" @click="store.addTask(element)">
+                <div class="btn add" @click="store.addTask(section.element)">
                   <span> Add Task </span>
                   <IconPlus />
                 </div>
               </header>
 
               <draggable
-                v-model="element.tasks"
+                v-model="section.element.tasks"
                 :animation="200"
                 tag="ul"
                 item-key="id"
@@ -94,11 +122,31 @@ const dropdown = ref(false);
                 group="tasks"
               >
                 <template #item="{ element }">
-                  <li @click="store.openTask(element)" class="task">
-                    <span>{{ element.title }}</span>
-                    <span class="state">
+                  <li
+                    class="task"
+                    :style="{
+                      'border-color': `var(--${section.element.color}-color)`,
+                    }"
+                    @click="store.openTask(element)"
+                    @click.right="store.openActions({ task: element }, $event)"
+                  >
+                    <div class="start">
+                      <h3 class="title" :title="element.title">
+                        {{ element.title }}
+                      </h3>
+                      <p class="description" :title="element.description">
+                        {{ limitText(element.description, 100) }}
+                      </p>
+                    </div>
+
+                    <span class="end" :class="{ done: element.completed }">
                       <IconDone v-show="element.completed" />
                     </span>
+
+                    <div
+                      class="progress-bg"
+                      :style="{ width: completeRatio(element.list) }"
+                    ></div>
                   </li>
                 </template>
               </draggable>
@@ -262,6 +310,7 @@ main {
   overflow: auto;
   height: $main-height;
   background-color: var(--kanban-bg-color);
+  transition: background-color 0.25s ease;
 
   .welcome-container {
     display: flex;
@@ -286,13 +335,14 @@ main {
     .section-container {
       background-color: rgba(255, 255, 255, 1);
       border-radius: 8px;
-      // border: 1px solid $border-color;
+      border: 1px solid $border-color;
       margin: $margin;
-      padding: $padding;
+      padding: 0;
 
       header.head {
         height: 40px;
         box-shadow: 0 2px 2px $border-color;
+        padding: $padding;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -300,7 +350,6 @@ main {
         h2 {
           padding: 3px;
           display: flex;
-          background-color: darken($border-color, 5%);
           border-radius: 4px;
 
           input {
@@ -340,6 +389,7 @@ main {
 
       .section {
         margin-top: 4px;
+        padding: $padding;
         display: flex;
         flex-direction: column;
         gap: 6px;
@@ -350,20 +400,63 @@ main {
         overflow-x: hidden;
 
         .task {
+          border: 1px solid $border-color;
           border-left: 4px solid $border-color;
+          cursor: pointer;
           border-radius: 4px;
           padding: 4px 6px;
           display: flex;
           justify-content: space-between;
+          position: relative;
 
           &:hover {
-            background-color: rgb(241, 241, 241);
+            background-color: rgb(253, 248, 255);
           }
-          .state {
+
+          .start {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+
+            .title {
+              font-size: 16px;
+              font-weight: 600;
+            }
+            .description {
+              font-weight: 300;
+              font-size: 12px;
+              opacity: 0.8;
+            }
+          }
+          .end {
+            display: flex;
+            align-items: flex-start;
+            padding: 2px;
+            &.done {
+              svg,
+              svg path {
+                fill: rgb(142, 231, 149);
+              }
+            }
+
             svg {
               width: 20px;
               height: 20px;
             }
+          }
+
+          .progress-bg {
+            height: 100%;
+            background-image: linear-gradient(
+              to right,
+              rgba(77, 215, 77, 0.188),
+              rgba(38, 158, 38, 0.113),
+              rgba(127, 197, 206, 0.201)
+            );
+            position: absolute;
+            left: 0;
+            top: 0;
+            pointer-events: none;
           }
         }
       }

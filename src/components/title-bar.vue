@@ -23,13 +23,15 @@ defineProps<Props>();
       </ul>
     </nav>
 
-    <div class="title-container">
+    <div
+      :class="{ 'title-container': true, 'justify-left': items.length == 0 }"
+    >
       <icon-carrot />
 
       <span>{{ title }}</span>
-    </div>
 
-    <span></span>
+      <div></div>
+    </div>
   </header>
 </template>
 
@@ -41,32 +43,45 @@ header {
   background-color: var(--primary-color);
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 20px;
 
   .title-container {
     display: flex;
     align-items: center;
-    justify-content: center;
     position: absolute;
+    left: 0;
     width: 100%;
     text-align: center;
     pointer-events: none;
+
+    &.justify-left {
+      span {
+        margin-left: 8px;
+      }
+    }
+    &:not(.justify-left) {
+      justify-content: space-between;
+      margin-left: 0;
+      span {
+        margin-left: -20px;
+      }
+    }
 
     svg {
       width: 20px;
       height: 20px;
       fill: white;
+      margin-left: 8px;
     }
     span {
       font-size: 16px;
       color: white;
-      margin-left: 8px;
     }
   }
   nav {
     display: inline-flex;
     padding: 0;
+    margin-left: 26px;
 
     ul {
       display: flex;

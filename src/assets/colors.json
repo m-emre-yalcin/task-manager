@@ -1,5 +1,18 @@
 {
   "primary": "rgb(51,0,44)",
   "title-text": "rgb(214,214,214)",
-  "kanban-bg": "rgb(255,255,255)"
+  "kanban-bg": "rgb(255,255,255)",
+  "p-white": "white",
+  "p-red": "#ffc5c5",
+  "p-blue": "#c5f4ff",
+  "p-green": "#cbffc5",
+  "p-yellow": "#fffbc5",
+  "p-purple": "#e3c5ff",
+  "s-todo": "#cbcbcb",
+  "s-progress": "#ffceb1",
+  "s-done": "#8ad38a",
+  "s-special": "#b1fff8",
+  "s-special2": "#7268ff",
+  "s-special3": "#f5a0ff",
+  "s-special4": "#ff9b9b"
 }
