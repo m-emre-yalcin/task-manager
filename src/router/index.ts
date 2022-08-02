@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
+import Settings from "../views/Settings.vue";
 import Task from "../views/Task.vue";
 
 const router = createRouter({
@@ -9,6 +10,11 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: Home,
+    },
+    {
+      path: "/settings",
+      name: "settings",
+      component: Settings,
     },
     {
       path: "/task/:id",

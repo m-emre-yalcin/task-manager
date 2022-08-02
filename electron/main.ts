@@ -1,8 +1,7 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require('electron')
 const { join } = require('path')
-const installExtension = require('electron-devtools-installer')
-const { VUEJS_DEVTOOLS } = installExtension
+const colors = require('../src/assets/colors')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
@@ -11,14 +10,14 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
-    // frame: false,
     titleBarStyle: 'hidden',
     titleBarOverlay: {
-      color: '#3e3e3e',
-      symbolColor: '#fff'
+      color: colors['primary'],
+      symbolColor: colors['title-text']
     },
     webPreferences: {
-      preload: join(__dirname, 'preload.ts')
+      preload: join(__dirname, 'preload.ts'),
+      scrollBounce: true
     }
   })
 
@@ -44,17 +43,6 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
-})
-
-app.on('ready', async () => {
-  if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
-    try {
-      await installExtension(VUEJS_DEVTOOLS)
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
-    }
-  }
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

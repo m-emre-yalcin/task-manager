@@ -18,7 +18,7 @@ const dropdown = ref(false);
     <!-- tabs and options -->
     <header class="draggable">
       <!-- contains all opened projects or settings -->
-      <div class="tabs" style="z-index: 10" @drag.stop.prevent>
+      <div class="tabs not-draggable" style="z-index: 10" @drag.stop.prevent>
         <draggable
           :list="tabs"
           :animation="200"
@@ -54,28 +54,6 @@ const dropdown = ref(false);
 
         <div class="btn add-project" @click="store.addTab()">
           <IconPlus />
-        </div>
-      </div>
-
-      <div class="user" tabindex="-1" @blur="dropdown = false" v-show="false">
-        <div class="img-container" @click="dropdown = !dropdown">
-          <!-- spin while saving -->
-          <div class="saving-spinner" :class="{ active: dropdown }" />
-
-          <!-- user image -->
-          <img
-            src="@/assets/images/user-placeholder.png"
-            alt="user placeholder image"
-            width="40"
-            height="40"
-          />
-        </div>
-
-        <div class="dropdown" v-if="dropdown">
-          <ul>
-            <li>Projects</li>
-            <li>Settings</li>
-          </ul>
         </div>
       </div>
     </header>
@@ -147,36 +125,31 @@ const dropdown = ref(false);
 
 <style lang="scss" scoped>
 $header-height: 40px;
-$main-height: calc(100vh - #{$header-height});
-$kanban-bg: rgba(255, 255, 255, 1);
+$main-height: calc(100vh - #{$header-height} * 2);
+$kanban-bg: rgb(255, 255, 255);
 $border-color: rgb(236, 236, 236);
 
-.draggable {
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-app-region: drag;
+.draggable.header {
+  z-index: 10;
 }
 
 header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: $header-height;
 
   .tabs {
     display: grid;
     align-items: flex-end;
     grid-auto-flow: column;
     justify-content: flex-start;
-    width: calc(100vw - 100px);
-    padding-left: 8px;
-    margin-top: 8px;
+    max-width: calc(100vw - 8px);
+    margin-top: 6px;
 
     ::-webkit-scrollbar,
     ::-webkit-scrollbar-track,
     ::-webkit-scrollbar-thumb {
-      height: 1px;
-      width: 0;
+      height: 0px;
+      width: 0px;
     }
     ::-webkit-scrollbar-thumb {
       background-color: black;
@@ -187,10 +160,8 @@ header {
       overflow-x: auto;
       display: flex;
       flex-direction: row;
-      gap: 1px;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
       white-space: nowrap;
+      gap: 1px;
 
       .tab {
         display: flex;
@@ -198,10 +169,11 @@ header {
         gap: 10px;
         padding: 4px 10px;
         user-select: none;
-        background-color: darken($kanban-bg, 10%);
-
-        border-top-left-radius: 4px;
-        border-top-right-radius: 4px;
+        background-color: rgb(82, 39, 74);
+        color: #eee;
+        svg {
+          fill: white;
+        }
 
         &.pinned {
           width: 40px;
@@ -211,12 +183,16 @@ header {
         }
         &.active {
           background-color: $kanban-bg;
+          color: #111;
+          svg {
+            fill: #111;
+          }
         }
         &:not(.active) {
           cursor: pointer;
 
           &:hover {
-            background-color: darken($kanban-bg, 70%);
+            background-color: rgb(116, 64, 111);
             color: white;
             svg {
               fill: white;
@@ -268,10 +244,10 @@ header {
       justify-content: center;
       width: 40px;
       height: 30px;
-      background-color: darken($kanban-bg, 50%);
+      background-color: rgb(110, 0, 98);
       border-top-right-radius: 4px;
       &:hover {
-        background-color: darken($kanban-bg, 80%);
+        background-color: rgb(151, 0, 133);
       }
 
       svg {
@@ -281,92 +257,11 @@ header {
       }
     }
   }
-
-  .user {
-    position: relative;
-    display: flex;
-    place-content: flex-end;
-    padding-right: 10px;
-    cursor: pointer;
-
-    .img-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      .saving-spinner {
-        transition: transform 0.25s ease;
-        background-color: rgb(97, 97, 97);
-        border-radius: 6px;
-        width: 28px;
-        height: 28px;
-
-        &.active {
-          transform: scale(1.2);
-        }
-      }
-
-      img {
-        position: absolute;
-        border: 1px solid #ccc;
-        width: 30px;
-        height: 30px;
-        border-radius: 6px;
-      }
-    }
-
-    .dropdown {
-      position: absolute;
-      right: 8px;
-      top: calc(100% + 12px);
-      background-color: white;
-      border: 1px solid $border-color;
-      border-radius: 4px;
-      font-size: 0.9em;
-      z-index: 99;
-      display: flex;
-      justify-content: flex-end;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-      &::before {
-        content: "";
-        display: block;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-top: 6px solid transparent;
-        border-bottom: 6px solid $border-color;
-        position: absolute;
-        top: -12px;
-        right: 9px;
-      }
-      &::after {
-        content: "";
-        display: block;
-        border-left: 5px solid transparent;
-        border-right: 5px solid transparent;
-        border-top: 5px solid transparent;
-        border-bottom: 5px solid white;
-        position: absolute;
-        top: -10px;
-        right: 10px;
-      }
-
-      ul {
-        li {
-          min-width: 120px;
-          padding: 6px 12px;
-          &:hover {
-            background-color: rgb(244, 244, 244);
-          }
-        }
-      }
-    }
-  }
 }
 main {
   overflow: auto;
   height: $main-height;
-  background-color: $kanban-bg;
+  background-color: var(--kanban-bg-color);
 
   .welcome-container {
     display: flex;
@@ -447,7 +342,7 @@ main {
         gap: 6px;
         flex: 1;
         border-radius: 4px;
-        height: calc(100vh - 80px - #{$margin * 2} - #{$padding * 2} - 16px);
+        height: calc(100vh - 120px - #{$margin * 2} - #{$padding * 2} - 16px);
         overflow-y: auto;
         overflow-x: hidden;
 
