@@ -10,6 +10,7 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 820,
     height: 600,
+    icon: join(__dirname, '../src/assets/maskable_icon_x192.png'),
     titleBarStyle: 'hidden',
     titleBarOverlay: {
       color: colors['primary'],
