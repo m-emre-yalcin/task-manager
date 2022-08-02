@@ -23,3 +23,20 @@ body {
   /* background-image: url(@/assets/images/Floral-Grey-Seamless-Pattern-For-Website-Background.jpg);*/
   background-color: var(--primary-color);
 }
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(110, 0, 97, 0.523);
+  transition: background-color 0.25s ease;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(151, 0, 133, 0.588);
+}
+::-webkit-scrollbar,
+::-webkit-scrollbar-track {
+  height: 14px;
+  background-color: rgb(221, 220, 220);
+}
+::-webkit-scrollbar:hover,
+::-webkit-scrollbar-track:hover {
+  background-color: rgb(184, 184, 184);
+}

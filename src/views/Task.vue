@@ -83,7 +83,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .task-container {
   background-color: white;
-  height: 100vh;
+  height: calc(100vh - 40px);
   display: flex;
   flex-direction: column;
   color: rgb(24, 24, 24);
