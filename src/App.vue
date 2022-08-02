@@ -32,6 +32,9 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <TitleBar :items="barItems" />
+  <TitleBar
+    :items="$route.name !== 'task' ? barItems : []"
+    title="Task manager"
+  />
   <RouterView />
 </template>

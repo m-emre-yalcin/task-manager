@@ -159,8 +159,7 @@ export const useHomeStore = defineStore({
     openTask(task: Task) {
       window.open(
         window.location.origin + "/task/" + task.id,
-        "_blank",
-        "top=300,left=300,nodeIntegration=no"
+        "_blank"
       )
     },
     closeTask() { return },

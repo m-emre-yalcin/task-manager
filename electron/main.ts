@@ -8,7 +8,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
+    width: 820,
     height: 600,
     titleBarStyle: 'hidden',
     titleBarOverlay: {
@@ -30,6 +30,22 @@ const createWindow = () => {
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
+
+  // Only windows with the `about:blank` url will be created.
+  // All other urls will be blocked.
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    return {
+      action: 'allow',
+      overrideBrowserWindowOptions: {
+        fullscreenable: false,
+        titleBarStyle: 'hidden',
+        titleBarOverlay: {
+          color: colors['primary'],
+          symbolColor: colors['title-text']
+        },
+      }
+    }
+  })
 }
 
 // This method will be called when Electron has finished

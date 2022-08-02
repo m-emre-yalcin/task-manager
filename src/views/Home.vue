@@ -21,7 +21,7 @@ const dropdown = ref(false);
       <div class="tabs not-draggable" style="z-index: 10" @drag.stop.prevent>
         <draggable
           :list="tabs"
-          :animation="200"
+          :animation="100"
           item-key="id"
           class="wrapper"
           handle=".tab:not(.pinned)"
@@ -293,6 +293,9 @@ main {
       header.head {
         height: 40px;
         box-shadow: 0 2px 2px $border-color;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
         h2 {
           padding: 3px;
