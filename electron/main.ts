@@ -39,12 +39,16 @@ const createWindow = () => {
     }
   })
 
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.setZoomFactor(1)
+  })
+
   // Load Web App
   if (isDevelopment) {
     mainWindow.loadURL('http://127.0.0.1:5173')
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools()
+    // mainWindow.webContents.openDevTools()
   }
   else {
     mainWindow.loadFile('dist/index.html')

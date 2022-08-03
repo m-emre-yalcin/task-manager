@@ -1,0 +1,66 @@
+<script lang="ts" setup>
+import draggable from "vuedraggable";
+import SectionHeader from "./section-header.vue";
+import TaskComponent from "./task.vue";
+import type { Section, Task } from "../types";
+
+defineProps<{
+  section: Section;
+  addTask: (section: Section) => void;
+  openTask: (task: Task) => void;
+  openActions: (payload: any, event: any) => void;
+}>();
+</script>
+
+
+<template>
+  <div
+    class="section-container"
+    @click.right="openActions({ section }, $event)"
+  >
+    <SectionHeader :section="section" :add-task="addTask" />
+
+    <!-- Draggable area -->
+    <draggable
+      :list="section.tasks"
+      :animation="200"
+      tag="ul"
+      item-key="id"
+      class="section"
+      group="tasks"
+    >
+      <!-- Draggable tasks -->
+      <template #item="{ element }">
+        <TaskComponent
+          :task="element"
+          :sectionColor="section.color"
+          :open-actions="openActions"
+          :open-task="openTask"
+        />
+      </template>
+    </draggable>
+  </div>
+</template>
+
+<style lang="scss">
+.section-container {
+  background-color: rgba(255, 255, 255, 1);
+  border-radius: 8px;
+  border: 1px solid rgb(236, 236, 236);
+  margin: 8px;
+  padding: 0;
+
+  .section {
+    margin-top: 4px;
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    border-radius: 4px;
+    height: calc(100vh - 120px - #{8px * 2} - #{4px * 2} - 16px);
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+</style>

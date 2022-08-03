@@ -18,3 +18,11 @@ ul {
 .flip-list-move {
   transition: transform 0.5s;
 }
+
+.btn {
+  cursor: pointer;
+}
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
