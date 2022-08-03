@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useHomeStore } from "../stores/home";
@@ -14,6 +14,7 @@ const addSubTask = () => {
   activeTask.value.list.unshift({
     id: activeTask.value.list.length + 1,
     text: "",
+    completed: false,
     created_by: {
       id: 1,
       name: "Emre",

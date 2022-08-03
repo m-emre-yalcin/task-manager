@@ -4,33 +4,24 @@ const { join } = require('path')
 const colors = require('../src/assets/colors')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
+const defaultWindowOptions = {
+  width: 1200, // 820
+  height: 600,
+  icon: join(__dirname, '../src/assets/maskable_icon_x192.png'),
+  titleBarStyle: 'hidden',
+  titleBarOverlay: {
+    color: colors['primary'],
+    symbolColor: colors['title-text']
+  },
+  webPreferences: {
+    preload: join(__dirname, 'preload.ts'),
+    scrollBounce: true
+  }
+}
 
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width: 820,
-    height: 600,
-    icon: join(__dirname, '../src/assets/maskable_icon_x192.png'),
-    titleBarStyle: 'hidden',
-    titleBarOverlay: {
-      color: colors['primary'],
-      symbolColor: colors['title-text']
-    },
-    webPreferences: {
-      preload: join(__dirname, 'preload.ts'),
-      scrollBounce: true
-    }
-  })
-
-  if (isDevelopment) {
-    mainWindow.loadURL('http://127.0.0.1:5173')
-  }
-  else {
-    mainWindow.loadFile('dist/index.html')
-  }
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  const mainWindow = new BrowserWindow(defaultWindowOptions)
 
   // Only windows with the `about:blank` url will be created.
   // All other urls will be blocked.
@@ -47,6 +38,17 @@ const createWindow = () => {
       }
     }
   })
+
+  // Load Web App
+  if (isDevelopment) {
+    mainWindow.loadURL('http://127.0.0.1:5173')
+
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools()
+  }
+  else {
+    mainWindow.loadFile('dist/index.html')
+  }
 }
 
 // This method will be called when Electron has finished

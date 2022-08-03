@@ -5,7 +5,7 @@
     <li>
       store options
       <ul>
-        <li>delete store</li>
+        <li>reset store</li>
         <li>choose new user</li>
       </ul>
     </li>

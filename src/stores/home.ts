@@ -116,11 +116,20 @@ export const useHomeStore = defineStore({
     removeTask() { return },
     updateTask() { return },
     openTask(task: Task) {
-      window.open(
+      const win = window.open(
         window.location.origin + "/task/" + task.id,
         "_blank",
         "width=450"
       )
+      const refreshLS = () => {
+        this.$state.tabs = JSON.parse(window.localStorage.home).tabs
+      }
+
+      ['click', 'keyup', 'change'].forEach(event => {
+        win?.addEventListener(event, () => {
+          refreshLS()
+        })
+      })
     },
     closeTask() { return },
     getActiveTask(id: number | undefined) {

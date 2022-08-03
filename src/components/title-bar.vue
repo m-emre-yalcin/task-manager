@@ -40,7 +40,6 @@ defineProps<Props>();
 header {
   padding: 8px;
   height: 40px;
-  background-color: var(--primary-color);
   display: flex;
   align-items: center;
   gap: 20px;
