@@ -2,9 +2,9 @@
 
 _explanations will be added_
 
-![carrot task manager screenshot](https://github.com/m-emre-yalcin/task-manager/tree/master/screenshots/Screenshot 2022-08-04 061605)
-![carrot task manager screenshot](https://github.com/m-emre-yalcin/task-manager/tree/master/screenshots/Screenshot 2022-08-04 061704.png)
-![carrot task manager screenshot](https://github.com/m-emre-yalcin/task-manager/tree/master/screenshots/Screenshot 2022-08-04 061725.png)
+![carrot task manager screenshot](https://github.com/m-emre-yalcin/task-manager/blob/master/screenshots/Screenshot%202022-08-04%20061605.png)
+![carrot task manager screenshot](https://github.com/m-emre-yalcin/task-manager/blob/master/screenshots/Screenshot%202022-08-04%20061704.png)
+![carrot task manager screenshot](https://github.com/m-emre-yalcin/task-manager/blob/master/screenshots/Screenshot%202022-08-04%20061725.png)
 
 ## Project Setup
 
