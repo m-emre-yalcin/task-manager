@@ -3,9 +3,21 @@ const { app, BrowserWindow, protocol } = require("electron");
 const { join } = require("path");
 const colors = require("../src/assets/colors");
 
+const getPlatformIcon = () => {
+  let icon;
+  switch (process.platform) {
+    case 'win32': icon = join(__dirname, 'icon.ico'); break;
+    case 'darwin': icon = join(__dirname, 'icon.icns'); break;
+    case 'linux': icon = join(__dirname, 'icon.png'); break;
+  }
+
+  return icon
+}
+
 const defaultWindowOptions = {
   width: 1200, // 820
   height: 600,
+  icon: getPlatformIcon(),
   titleBarStyle: "hidden",
   titleBarOverlay: {
     color: colors["primary"],
