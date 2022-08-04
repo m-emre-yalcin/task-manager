@@ -10,7 +10,7 @@ defineProps<{
 
 <template>
   <header class="head">
-    <h2>
+    <h2 :style="{ backgroundColor: `var(--${section.color}-color)` }">
       <input type="text" v-model="section.label" placeholder="Section label" />
     </h2>
     <div class="btn add" @click="addTask(section)">
