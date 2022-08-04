@@ -22,7 +22,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "NODE_ENV=production && vite build && electron-forge make"
+    "make": "vite build && electron-forge make"
   },
   "dependencies": {
     "concurrently": "^7.3.0",
