@@ -1,67 +1,30 @@
-import { defineStore } from 'pinia'
-import type { User, Task, Section, Project } from '@/types'
+import { defineStore } from "pinia";
+import type { User, Task, Section, Project, ProjectColors, ActionsBox } from "@/types";
 
 export const useHomeStore = defineStore({
-  id: 'home',
+  id: "home",
   state: () => ({
     user: {
       id: 1,
       name: "Emre Yalçın",
-      avatar: null,
+      avatar: null
     },
     tabs: [] as Array<Project>,
     activeTask: {} as Task,
-    actions: {
-      project: [
-        {
-          action: 'Rename'
-        },
-        {
-          action: 'Theme'
-        },
-        {
-          action: 'Archieve'
-        },
-        {
-          action: 'Delete'
-        }
-      ],
-      section: [
-        {
-          action: 'Rename'
-        },
-        {
-          action: 'Color'
-        },
-        {
-          action: 'Delete'
-        }
-      ],
-      task: [
-        {
-          action: 'Rename'
-        },
-        {
-          action: 'Complete'
-        },
-        {
-          action: 'Delete'
-        }
-      ]
-    }
+    actionsbox: {} as ActionsBox
   }),
   getters: {
     getActiveTab: (state) => {
-      return state.tabs.find(tab => tab.activated)
-    },
+      return state.tabs.find((tab) => tab.activated);
+    }
   },
   actions: {
     switchTab(index: number) {
-      this.tabs.map(tab => {
-        tab.activated = false
-        return tab
-      })
-      this.tabs[index].activated = true
+      this.tabs.map((tab) => {
+        tab.activated = false;
+        return tab;
+      });
+      this.tabs[index].activated = true;
     },
     addTab() {
       const id = this.tabs.length + 1;
@@ -76,78 +39,96 @@ export const useHomeStore = defineStore({
         activated: false,
         sections: [],
         tags: [],
-        color: 'p-white'
-      })
-      this.switchTab(this.tabs.length - 1)
+        color: "p-white"
+      });
+      this.switchTab(this.tabs.length - 1);
     },
     removeTab(index: number) {
       // make previous tab active if this is active
       if (this.tabs[index].activated && index > 0) {
-        this.tabs[index - 1].activated = true
+        this.tabs[index - 1].activated = true;
       }
 
-      this.tabs.splice(index, 1)
+      this.tabs.splice(index, 1);
+    },
+    changeProjectTheme(project: Project, theme: ProjectColors) {
+      project.color = theme
     },
     addSection(project: Project) {
       project.sections.push({
         id: Date.now(),
         label: "New section",
         tasks: [],
-        color: 's-todo'
+        color: "s-todo"
       });
     },
-    removeSection() { return },
+    removeSection(index: number) {
+      this.getActiveTab?.sections.splice(index, 1)
+    },
     addTask(section: Section) {
       if (this.getActiveTab) {
         section.tasks.push({
           id: Date.now(),
-          title: 'New task',
+          title: "New task",
           completed: false,
-          description: '',
+          description: "",
           section: Number(section.id),
           list: []
-        })
+        });
 
-        return
+        return;
       }
 
-      throw new Error('There is no active tab')
+      throw new Error("There is no active tab");
     },
-    removeTask() { return },
-    updateTask() { return },
+    removeTask(section: Section, index: number) {
+      section.tasks.splice(index, 1)
+    },
     openTask(task: Task) {
       const win = window.open(
         window.location.origin + "/task/" + task.id,
         "_blank",
         "width=450"
-      )
+      );
       const refreshLS = () => {
-        this.$state.tabs = JSON.parse(window.localStorage.home).tabs
-      }
+        this.$state.tabs = JSON.parse(window.localStorage.home).tabs;
+      };
 
-      ['click', 'keyup', 'change'].forEach(event => {
+      // Sync with new window
+      ["click", "keyup", "change"].forEach((event) => {
         win?.addEventListener(event, () => {
-          refreshLS()
-        })
-      })
+          refreshLS();
+        });
+      });
     },
-    closeTask() { return },
     getActiveTask(id: number | undefined) {
-      const taskId = Number(id)
+      const taskId = Number(id);
 
       // Q(n3) complexity - needs performant way to get active task
-      this.tabs.find(tab => {
-        return tab.sections.find(section => {
-          return section.tasks.find(task => {
+      this.tabs.find((tab) => {
+        return tab.sections.find((section) => {
+          return section.tasks.find((task) => {
             if (task.id === taskId) {
-              return this.activeTask = task
+              return (this.activeTask = task);
             }
-          })
-        })
-      })
+          });
+        });
+      });
     },
-    openActions(payload, e) {
-      return
+    openActions(
+      payload: any,
+      e: Event
+    ) {
+      this.actionsbox = {
+        data: payload,
+        event: e
+      };
+
+      e.stopPropagation()
+      e.preventDefault()
+    },
+    closeActions() {
+      this.actionsbox = {}
     }
   },
   // Persistent Store Details: https://seb-l.github.io/pinia-plugin-persist
@@ -155,8 +136,9 @@ export const useHomeStore = defineStore({
     enabled: true,
     strategies: [
       {
-        storage: localStorage, paths: ['tabs', 'user']
+        storage: localStorage,
+        paths: ["tabs", "user"]
       }
     ]
   }
-})
+});

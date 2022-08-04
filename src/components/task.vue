@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import IconDone from "../components/icons/IconDone.vue";
-import type { Task, SubTask } from "../types";
+import type { Task, SubTask, Section } from "../types";
 
 defineProps<{
-  sectionColor: string;
   task: Task;
+  section: Section;
   openTask: (task: Task) => void;
   openActions: (payload: any, event: any) => any;
 }>();
@@ -27,10 +27,10 @@ const limitText = (text: string, limit: number) => {
   <li
     class="task"
     :style="{
-      'border-color': `var(--${sectionColor}-color)`,
+      'border-color': `var(--${section.color}-color)`,
     }"
     @click="openTask(task)"
-    @click.right="openActions({ task }, $event)"
+    @click.right="openActions({ type: 'task', item: task, section }, $event)"
   >
     <div class="start">
       <h3 class="title" :title="task.title">

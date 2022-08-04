@@ -8,7 +8,7 @@ defineProps<{
   section: Section;
   addTask: (section: Section) => void;
   openTask: (task: Task) => void;
-  openActions: (payload: any, event: any) => void;
+  openActions: (payload: any, event: Event) => void;
 }>();
 </script>
 
@@ -16,7 +16,7 @@ defineProps<{
 <template>
   <div
     class="section-container"
-    @click.right="openActions({ section }, $event)"
+    @click.right="openActions({ type: 'section', item: section }, $event)"
   >
     <SectionHeader :section="section" :add-task="addTask" />
 
@@ -33,7 +33,7 @@ defineProps<{
       <template #item="{ element }">
         <TaskComponent
           :task="element"
-          :sectionColor="section.color"
+          :section="section"
           :open-actions="openActions"
           :open-task="openTask"
         />

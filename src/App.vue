@@ -63,4 +63,12 @@ onBeforeMount(() => {
 .complete-leave-to {
   transform: scale(1.1);
 }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s;
+}
+.fade-enter-from,
+.fade-enter-to {
+  opacity: 0;
+}
 </style>

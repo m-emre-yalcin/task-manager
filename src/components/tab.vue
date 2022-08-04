@@ -20,13 +20,11 @@ defineProps<{
       pinned: tab.pinned,
       active: tab.activated,
     }"
-    :style="
-      tab.activated && {
-        background: theme,
-      }
-    "
+    :style="{
+      background: tab.activated ? theme : 'unset',
+    }"
     @click="switchTab(index)"
-    @click.right="openActions({ project: tab }, $event)"
+    @click.right="openActions({ type: 'project', item: tab, index }, $event)"
   >
     <div class="left">
       <span class="text">{{ tab.title }}</span>

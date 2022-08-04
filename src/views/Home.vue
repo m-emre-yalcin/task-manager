@@ -5,9 +5,10 @@ import { useHomeStore } from "../stores/home";
 
 import Tabs from "../components/tabs.vue";
 import Kanban from "../components/kanban.vue";
+import Actionsbox from "../components/actionsbox.vue";
 
 const store = useHomeStore();
-const { getActiveTab } = storeToRefs(store);
+const { tabs, getActiveTab, actionsbox } = storeToRefs(store);
 
 const themeColor = computed(() => {
   return `var(--${getActiveTab?.value?.color}-color)`;
@@ -25,6 +26,9 @@ const themeColor = computed(() => {
     <main :style="{ background: themeColor }">
       <Kanban />
     </main>
+
+    <!-- for right click actions -->
+    <Actionsbox />
   </div>
 </template>
 
