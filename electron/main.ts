@@ -3,7 +3,6 @@ const { app, BrowserWindow, ipcMain } = require('electron')
 const { join } = require('path')
 const colors = require('../src/assets/colors')
 
-const isDevelopment = process.env.NODE_ENV !== 'production'
 const defaultWindowOptions = {
   width: 1200, // 820
   height: 600,
@@ -44,14 +43,15 @@ const createWindow = () => {
   })
 
   // Load Web App
-  if (isDevelopment) {
+  if (app.isPackaged) {
+    mainWindow.loadFile(join(__dirname, '../dist/index.html/'))
+  }
+  else {
+    // Development
     mainWindow.loadURL('http://127.0.0.1:5173')
 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
-  }
-  else {
-    mainWindow.loadFile('dist/index.html')
   }
 }
 
