@@ -5,6 +5,7 @@ import TaskComponent from "./task.vue";
 import type { Section, Task } from "../types";
 
 defineProps<{
+  index: number;
   section: Section;
   addTask: (section: Section) => void;
   openTask: (task: Task) => void;
@@ -16,7 +17,9 @@ defineProps<{
 <template>
   <div
     class="section-container"
-    @click.right="openActions({ type: 'section', item: section }, $event)"
+    @click.right="
+      openActions({ type: 'section', item: section, index }, $event)
+    "
   >
     <SectionHeader :section="section" :add-task="addTask" />
 

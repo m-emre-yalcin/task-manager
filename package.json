@@ -65,7 +65,14 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "src/assets/maskable_icon_x512.ico",
+        "platform": "all"
+      },
+      "electronPackagerConfig": {
+        "icon": "src/assets/maskable_icon_x512.ico",
+        "platform": "all"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
@@ -87,11 +94,7 @@
           "name": "@electron-forge/maker-rpm",
           "config": {}
         }
-      ],
-      "electronPackagerConfig": {
-        "icon": "src/assets/maskable_icon_x512.ico",
-        "platform": "all"
-      }
+      ]
     }
   }
 }

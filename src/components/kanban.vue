@@ -24,8 +24,9 @@ const { getActiveTab } = storeToRefs(store);
       handle=".section-container"
     >
       <!-- Draggable sections -->
-      <template #item="{ element }">
+      <template #item="{ element, index }">
         <Section
+          :index="index"
           :section="element"
           :add-task="store.addTask"
           :open-task="store.openTask"

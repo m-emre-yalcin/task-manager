@@ -6,7 +6,6 @@ const colors = require("../src/assets/colors");
 const defaultWindowOptions = {
   width: 1200, // 820
   height: 600,
-  icon: join(__dirname, "../src/assets/maskable_icon_x512.ico"),
   titleBarStyle: "hidden",
   titleBarOverlay: {
     color: colors["primary"],
