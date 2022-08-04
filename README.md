@@ -1,10 +1,14 @@
-# Carrot Task Manager
+# Task Manager
 
-_explanations will be added_
+Open-source desktop app for managing tasks on kanban board in local environment.
 
-![carrot task manager screenshot](https://github.com/m-emre-yalcin/task-manager/blob/master/screenshots/Screenshot%202022-08-04%20061605.png)
-![carrot task manager screenshot](https://github.com/m-emre-yalcin/task-manager/blob/master/screenshots/Screenshot%202022-08-04%20061704.png)
-![carrot task manager screenshot](https://github.com/m-emre-yalcin/task-manager/blob/master/screenshots/Screenshot%202022-08-04%20061725.png)
+You can clone the repo or download one of the [releases](https://github.com/m-emre-yalcin/task-manager/releases) for start using it.
+
+_This repo is open for any contribution!_
+
+![task manager screenshot](https://github.com/m-emre-yalcin/task-manager/blob/master/screenshots/Screenshot%202022-08-04%20061605.png)
+![task manager screenshot](https://github.com/m-emre-yalcin/task-manager/blob/master/screenshots/Screenshot%202022-08-04%20061704.png)
+![task manager screenshot](https://github.com/m-emre-yalcin/task-manager/blob/master/screenshots/Screenshot%202022-08-04%20061725.png)
 
 ## Project Setup
 
@@ -15,6 +19,12 @@ npm install
 ### Compile and Hot-Reload for Development
 
 ```sh
+npm run electron:dev
+```
+
+#### OR
+
+```sh
 npm run dev
 ```
 
@@ -22,16 +32,16 @@ npm run dev
 npm run electron .
 ```
 
-#### OR
-
-```sh
-npm run electron:dev
-```
-
 ### Type-Check, Compile and Minify for Production
 
 ```sh
 npm run build
+```
+
+### Build Electron App
+
+```sh
+npm run make
 ```
 
 ### Run Unit Tests with [Vitest](https://vitest.dev/)

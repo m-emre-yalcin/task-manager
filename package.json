@@ -1,8 +1,12 @@
 {
   "name": "task-manager",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "electron/main.ts",
-  "author": "M. Emre Yalcin",
+  "author": {
+    "name": "M. Emre Yalcin",
+    "email": "emrreyalcin@gmail.com"
+  },
+  "description": "Desktop app for managing tasks on kanban board in local environment",
   "license": "MIT",
   "scripts": {
     "dev": "vite",
@@ -15,11 +19,15 @@
     "test:e2e:ci": "start-server-and-test preview http://localhost:4173/ 'cypress run --e2e'",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "start": "electron-forge start",
+    "package": "electron-forge package",
+    "make": "NODE_ENV=production && vite build && electron-forge make"
   },
   "dependencies": {
     "concurrently": "^7.3.0",
     "dexie": "^3.2.2",
+    "electron-squirrel-startup": "^1.0.0",
     "pinia": "^2.0.16",
     "pinia-plugin-persist": "^1.0.0",
     "vue": "^3.2.37",
@@ -27,6 +35,11 @@
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.65",
+    "@electron-forge/maker-deb": "^6.0.0-beta.65",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.65",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.65",
+    "@electron-forge/maker-zip": "^6.0.0-beta.65",
     "@rushstack/eslint-patch": "^1.1.0",
     "@types/jsdom": "^16.2.14",
     "@types/node": "^16.11.45",
@@ -49,5 +62,36 @@
     "vite": "^3.0.1",
     "vitest": "^0.18.1",
     "vue-tsc": "^0.38.8"
+  },
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "task_manager"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ],
+      "electronPackagerConfig": {
+        "icon": "./src/assets/maskable_icon_x512.ico",
+        "platform": "all"
+      }
+    }
   }
 }

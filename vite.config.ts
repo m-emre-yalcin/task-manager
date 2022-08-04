@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from "node:url";
-
+import { join } from "node:path";
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 
@@ -12,5 +12,6 @@ export default defineConfig({
       "~": fileURLToPath(new URL("./", import.meta.url)),
     },
   },
-  base: './dist',
+  base: './',
+  publicDir: 'dist'
 });

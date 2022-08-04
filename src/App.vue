@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import colors from "@/assets/colors";
 import TitleBar from "./components/title-bar.vue";
 
+const router = useRouter();
 const barItems = ref([
   {
     name: "Projects",
@@ -28,6 +30,11 @@ onBeforeMount(() => {
   const css = document.createElement("style");
   css.innerText = colorToCssVar(colors);
   document.head.appendChild(css);
+});
+
+// fix electron blank screen on production
+onMounted(() => {
+  router.push({ name: "home" });
 });
 </script>
 
