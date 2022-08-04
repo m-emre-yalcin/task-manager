@@ -31,11 +31,6 @@ onBeforeMount(() => {
   css.innerText = colorToCssVar(colors);
   document.head.appendChild(css);
 });
-
-// fix electron blank screen on production
-onMounted(() => {
-  router.push({ name: "home" });
-});
 </script>
 
 <template>

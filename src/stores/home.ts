@@ -86,7 +86,7 @@ export const useHomeStore = defineStore({
     },
     openTask(task: Task) {
       const win = window.open(
-        window.location.origin + "/task/" + task.id,
+        window.location.href + "task/" + task.id,
         "_blank",
         "width=450"
       );
@@ -95,7 +95,7 @@ export const useHomeStore = defineStore({
       };
 
       // Sync with new window
-      ["click", "keyup", "change"].forEach((event) => {
+      ["click", "keyup", "change", "blur"].forEach((event) => {
         win?.addEventListener(event, () => {
           refreshLS();
         });

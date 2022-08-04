@@ -12,6 +12,6 @@ export default defineConfig({
       "~": fileURLToPath(new URL("./", import.meta.url)),
     },
   },
-  base: './',
-  publicDir: 'dist'
+  base: '',
+  publicDir: '/dist/'
 });

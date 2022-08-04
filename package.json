@@ -89,7 +89,7 @@
         }
       ],
       "electronPackagerConfig": {
-        "icon": "./src/assets/maskable_icon_x512.ico",
+        "icon": "src/assets/maskable_icon_x512.ico",
         "platform": "all"
       }
     }
