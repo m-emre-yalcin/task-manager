@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, protocol } = require("electron");
+const { app, BrowserWindow, nativeImage } = require("electron");
 const { join } = require("path");
 const colors = require("../src/assets/colors");
 
@@ -11,8 +11,9 @@ const getPlatformIcon = () => {
     case 'linux': icon = join(__dirname, 'icon.png'); break;
   }
 
-  return icon
+  return nativeImage.createFromPath(icon)
 }
+
 
 const defaultWindowOptions = {
   width: 1200, // 820

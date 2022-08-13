@@ -33,8 +33,9 @@ defineProps<{
       group="tasks"
     >
       <!-- Draggable tasks -->
-      <template #item="{ element }">
+      <template #item="{ element, index }">
         <TaskComponent
+          :index="index"
           :task="element"
           :section="section"
           :open-actions="openActions"

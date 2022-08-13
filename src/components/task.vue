@@ -3,6 +3,7 @@ import IconDone from "../components/icons/IconDone.vue";
 import type { Task, SubTask, Section } from "../types";
 
 defineProps<{
+  index: number;
   task: Task;
   section: Section;
   openTask: (task: Task) => void;
@@ -30,7 +31,9 @@ const limitText = (text: string, limit: number) => {
       'border-color': `var(--${section.color}-color)`,
     }"
     @click="openTask(task)"
-    @click.right="openActions({ type: 'task', item: task, section }, $event)"
+    @click.right="
+      openActions({ type: 'task', item: task, section, index }, $event)
+    "
   >
     <div class="start">
       <h3 class="title" :title="task.title">

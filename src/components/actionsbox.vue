@@ -2,10 +2,11 @@
 import { ref } from "vue";
 import { useHomeStore } from "../stores/home";
 import { storeToRefs } from "pinia";
-import colors from "@/assets/colors.json";
-import type { ActionsBox, Project } from "@/types";
+import colors from "../assets/colors.json";
 import IconDone from "./icons/IconDone.vue";
 import IconTrash from "./icons/IconTrash.vue";
+
+import type { ActionsBox, Project } from "@/types";
 
 const store = useHomeStore();
 const { actionsbox } = storeToRefs(store);
