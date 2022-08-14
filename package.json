@@ -71,12 +71,14 @@
       "src/assets/colors.json"
     ],
     "dmg": {
-      "icon": "electron/icon.icns"
+      "icon": "electron/icon.icns",
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}"
     },
     "win": {
       "asar": false,
       "target": "nsis",
-      "icon": "electron/icon.ico"
+      "icon": "electron/icon.ico",
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}"
     },
     "linux": {
       "target": [
@@ -85,12 +87,14 @@
         "snap",
         "AppImage"
       ],
-      "category": "Development"
+      "category": "Development",
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}"
     },
     "nsis": {
       "installerIcon": "electron/icon.ico",
       "installerHeaderIcon": "electron/icon.ico",
-      "deleteAppDataOnUninstall": false
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "${productName}-${version}-${os}-${arch}.${ext}"
     },
     "publish": {
       "provider": "github",
