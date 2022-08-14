@@ -92,6 +92,11 @@
       "installerHeaderIcon": "electron/icon.ico",
       "deleteAppDataOnUninstall": false
     },
-    "extends": null
+    "publish": {
+      "provider": "github",
+      "owner": "M. Emre Yalcin",
+      "repo": "https://github.com/m-emre-yalcin/task-manager",
+      "releaseType": "release"
+    }
   }
 }
