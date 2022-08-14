@@ -80,7 +80,7 @@ onMounted(() => {
           >
             <div class="user" :title="subtask.created_by.name">
               <img
-                src="@/assets/images/user-placeholder.png"
+                src="../assets/images/user-placeholder.png"
                 width="30"
                 height="30"
               />

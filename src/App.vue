@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import colors from "@/assets/colors";
+import colors from "./assets/colors.json";
 import TitleBar from "./components/title-bar.vue";
 
 const router = useRouter();

@@ -1,6 +1,6 @@
 {
   "name": "task-manager",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "electron/main.ts",
   "author": {
     "name": "M. Emre Yalcin",
@@ -10,19 +10,18 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check build-only",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "build": "vite build",
+    "build:tc": "run-p type-check vite build",
     "preview": "vite preview --port 4173",
     "electron:dev": "concurrently \"electron .\" \"npm run dev\"",
     "electron": "electron .",
     "test:unit": "vitest --environment jsdom",
     "test:e2e": "start-server-and-test preview http://localhost:4173/ 'cypress open --e2e'",
     "test:e2e:ci": "start-server-and-test preview http://localhost:4173/ 'cypress run --e2e'",
-    "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
-    "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "vite build && electron-forge make"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
     "concurrently": "^7.3.0",
@@ -35,11 +34,6 @@
     "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
-    "@electron-forge/cli": "^6.0.0-beta.65",
-    "@electron-forge/maker-deb": "^6.0.0-beta.65",
-    "@electron-forge/maker-rpm": "^6.0.0-beta.65",
-    "@electron-forge/maker-squirrel": "^6.0.0-beta.65",
-    "@electron-forge/maker-zip": "^6.0.0-beta.65",
     "@rushstack/eslint-patch": "^1.1.0",
     "@types/jsdom": "^16.2.14",
     "@types/node": "^16.11.45",
@@ -50,6 +44,7 @@
     "@vue/tsconfig": "^0.1.3",
     "cypress": "^10.3.0",
     "electron": "^19.0.10",
+    "electron-builder": "^23.3.3",
     "eslint": "^8.5.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-vue": "^9.0.0",
@@ -63,30 +58,40 @@
     "vitest": "^0.18.1",
     "vue-tsc": "^0.38.8"
   },
-  "config": {
-    "forge": {
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "task_manager"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
+  "build": {
+    "productName": "Task Manager",
+    "appId": "com.TaskManager.app",
+    "directories": {
+      "buildResources": "dist",
+      "output": "out"
+    },
+    "files": [
+      "dist",
+      "electron",
+      "assets/colors.json"
+    ],
+    "dmg": {
+      "icon": "electron/icon.icns"
+    },
+    "win": {
+      "asar": false,
+      "target": "nsis",
+      "icon": "electron/icon.ico"
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "rpm",
+        "snap",
+        "AppImage"
+      ],
+      "category": "Development"
+    },
+    "nsis": {
+      "installerIcon": "electron/icon.ico",
+      "installerHeaderIcon": "electron/icon.ico",
+      "deleteAppDataOnUninstall": false
+    },
+    "extends": null
   }
 }

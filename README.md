@@ -35,13 +35,13 @@ npm run electron .
 ### Type-Check, Compile and Minify for Production
 
 ```sh
-npm run build
+npm run build:tc
 ```
 
 ### Build Electron App
 
 ```sh
-npm run make
+npm run dist
 ```
 
 ### Run Unit Tests with [Vitest](https://vitest.dev/)
