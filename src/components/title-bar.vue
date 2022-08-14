@@ -1,24 +1,40 @@
 <script lang="ts" setup>
 import IconCarrot from "./icons/IconCarrot.vue";
 export interface Props {
-  items: Array<{
-    name: string;
-    href: string;
-  }>;
   title: string;
+  items: Array<Item>;
 }
-
+export type Item = {
+  name: string;
+  showList?: boolean;
+  list: Array<Item>;
+};
 defineProps<Props>();
+
+function toggleList(item: Item, value?: boolean) {
+  if (typeof arguments[1] !== "undefined") item.showList = value;
+  else item.showList = !item.showList;
+}
 </script>
 
 <template>
   <header class="draggable">
     <nav class="not-draggable">
       <ul>
-        <li v-for="item in items" :key="item.href">
-          <router-link :to="item.href">
-            <span class="name">{{ item.name }}</span>
-          </router-link>
+        <li
+          v-for="item in items"
+          :key="item.name"
+          tabindex="-1"
+          @blur.stop.prevent="toggleList(item, false)"
+          @click="toggleList(item)"
+        >
+          <div class="name">{{ item.name }}</div>
+
+          <ul class="drop-down" v-if="item.showList">
+            <li v-for="subItem in item.list" :key="subItem.name">
+              {{ subItem.name }}
+            </li>
+          </ul>
         </li>
       </ul>
     </nav>
@@ -88,17 +104,56 @@ header {
       align-items: center;
 
       li {
-        a {
+        position: relative;
+
+        .name {
           cursor: pointer;
           text-decoration: none;
           color: rgb(214, 214, 214);
-          font-weight: 300;
+          font-weight: 400;
           padding: 4px 6px;
           font-size: 14px;
           border-radius: 4px;
 
           &:hover {
             background-color: rgba(255, 255, 255, 0.1);
+          }
+        }
+
+        ul.drop-down {
+          position: absolute;
+          display: flex;
+          flex-direction: column;
+          background-color: white;
+          z-index: 10;
+          border-radius: 6px;
+          left: 0px;
+          top: calc(100% + 4px);
+          box-shadow: 0 0 24px rgba(0, 0, 0, 0.12);
+
+          li {
+            color: rgb(20, 20, 20);
+            background-color: white;
+            padding: 4px 8px;
+            display: flex;
+            width: 100%;
+            min-width: 140px;
+            border-bottom: 1px solid #eee;
+
+            &:first-child {
+              border-top-left-radius: 6px;
+              border-top-right-radius: 6px;
+            }
+            &:last-child {
+              border-bottom-left-radius: 6px;
+              border-bottom-right-radius: 6px;
+              border-bottom: unset;
+            }
+
+            &:hover {
+              background-color: rgb(68, 8, 60);
+              color: white;
+            }
           }
         }
       }

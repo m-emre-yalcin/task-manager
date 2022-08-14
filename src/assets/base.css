@@ -25,7 +25,9 @@ body {
   /* background-image: url(@/assets/images/Floral-Grey-Seamless-Pattern-For-Website-Background.jpg);*/
   background-color: var(--primary-color);
 }
-input {
+input,
+textarea,
+select {
   outline: unset;
   font-family: var(--main-font);
 }

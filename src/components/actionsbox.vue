@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useHomeStore } from "../stores/home";
 import { storeToRefs } from "pinia";
 import colors from "../assets/colors.json";
@@ -18,6 +18,14 @@ const getThemes = (prefix: "p-" | "s-" | "t-") => {
       return { key, color: colors[key] };
     });
 };
+
+onMounted(() => {
+  document.body.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      store.closeActions();
+    }
+  });
+});
 
 const datalist = ref({
   project: [
@@ -105,7 +113,12 @@ const executeItemAction = (item: any, type: any) => {
           @click="executeItemAction(item, actionsbox.data.type)"
         >
           <template v-if="item.key">
-            <input type="text" v-model="actionsbox.data.item[item.key]" />
+            <input
+              autofocus
+              type="text"
+              v-model="actionsbox.data.item[item.key]"
+              @keydown.enter="store.closeActions()"
+            />
           </template>
 
           <template v-else-if="item.colors">

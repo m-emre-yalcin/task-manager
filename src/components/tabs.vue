@@ -15,7 +15,7 @@ const { tabs } = storeToRefs(store);
 
 <template>
   <!-- contains all opened projects or settings -->
-  <div class="tabs not-draggable">
+  <div class="tabs not-draggable" v-if="tabs.length">
     <draggable
       :list="tabs"
       :animation="100"
@@ -47,7 +47,7 @@ const { tabs } = storeToRefs(store);
   align-items: flex-end;
   grid-auto-flow: column;
   justify-content: flex-start;
-  max-width: calc(100vw - 8px);
+  max-width: calc(100vw);
   margin-top: 6px;
 
   ::-webkit-scrollbar,

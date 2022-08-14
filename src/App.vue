@@ -8,11 +8,27 @@ const router = useRouter();
 const barItems = ref([
   {
     name: "Projects",
-    href: "/",
   },
   {
     name: "Settings",
-    href: "/settings",
+    showList: false,
+    list: [
+      {
+        name: "Theme",
+      },
+      {
+        name: "Download store",
+      },
+      {
+        name: "Reset store",
+      },
+      {
+        name: "Change user",
+      },
+      {
+        name: "Notifications",
+      },
+    ],
   },
 ]);
 

@@ -44,7 +44,6 @@ defineProps<{
   gap: 10px;
   padding: 4px 10px;
   user-select: none;
-  background-color: rgb(82, 39, 74);
   color: #eee;
   svg {
     fill: white;
@@ -64,6 +63,7 @@ defineProps<{
     }
   }
   &:not(.active) {
+    background-color: rgb(72, 1, 62) !important;
     cursor: pointer;
 
     &:hover {
