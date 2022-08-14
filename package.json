@@ -94,7 +94,7 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "M. Emre Yalcin",
+      "owner": "m-emre-yalcin",
       "repo": "https://github.com/m-emre-yalcin/task-manager",
       "releaseType": "release"
     }
