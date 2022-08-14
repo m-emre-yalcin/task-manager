@@ -56,9 +56,11 @@ const createWindow = async () => {
 
   // Load Web App
   if (app.isPackaged) {
-    // live url: https://task-manager-nine-lemon.vercel.app/#/
+    // From live url
+    mainWindow.loadURL("https://task-manager-nine-lemon.vercel.app/#/");
 
-    mainWindow.loadFile(join(__dirname, '../dist/index.html/'))
+    // From local dist
+    // mainWindow.loadFile(join(__dirname, '../dist/index.html/'))
   }
   else {
     // Development
