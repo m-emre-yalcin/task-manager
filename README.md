@@ -4,6 +4,8 @@ Open-source desktop app for managing tasks on kanban board in local environment.
 
 You can clone the repo or download one of the [releases](https://github.com/m-emre-yalcin/task-manager/releases) for start using it.
 
+You can use it on browser as well: [demo](https://task-manager-nine-lemon.vercel.app/)
+
 _This repo is open for any contribution!_
 
 ![task manager screenshot](https://github.com/m-emre-yalcin/task-manager/blob/master/screenshots/Screenshot%202022-08-04%20061605.png)
