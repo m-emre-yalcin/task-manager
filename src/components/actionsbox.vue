@@ -40,9 +40,6 @@ const datalist = ref({
     },
     {
       name: "Delete project",
-      fn: () => {
-        store.removeTab(actionsbox.value?.data.index);
-      },
       icon: IconTrash,
     },
   ],
@@ -78,7 +75,7 @@ const datalist = ref({
 
 // Workaround code for now
 const executeItemAction = (item: any, type: any) => {
-  if (item.name === "Delete") {
+  if (item.name.contains("Delete")) {
     if (type === "project") {
       store.removeTab(actionsbox.value?.data.index);
     }
