@@ -1,34 +1,34 @@
 {
   "name": "task-manager",
   "version": "1.1.0",
-  "main": "electron/main.ts",
+  "description": "Desktop app for managing tasks on kanban board in local environment",
   "author": {
     "name": "M. Emre Yalcin",
     "email": "emrreyalcin@gmail.com"
   },
-  "description": "Desktop app for managing tasks on kanban board in local environment",
-  "license": "MIT",
   "scripts": {
-    "dev": "vite",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder",
     "build": "vite build",
-    "build:tc": "run-p type-check vite build",
-    "preview": "vite preview --port 4173",
-    "electron:dev": "concurrently \"electron .\" \"npm run dev\"",
-    "electron": "electron .",
     "test:unit": "vitest --environment jsdom",
     "test:e2e": "start-server-and-test preview http://localhost:4173/ 'cypress open --e2e'",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "build:tc": "run-p type-check vite build",
+    "dev": "vite",
+    "dist": "electron-builder",
+    "electron": "electron .",
+    "electron:dev": "concurrently \"electron .\" \"npm run dev\"",
+    "pack": "electron-builder --dir",
+    "preview": "vite preview --port 4173",
     "test:e2e:ci": "start-server-and-test preview http://localhost:4173/ 'cypress run --e2e'",
-    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
+  "main": "electron/main.ts",
   "dependencies": {
     "concurrently": "^7.3.0",
     "dexie": "^3.2.2",
     "electron-squirrel-startup": "^1.0.0",
     "pinia": "^2.0.16",
     "pinia-plugin-persist": "^1.0.0",
+    "register-service-worker": "^1.7.1",
     "vue": "^3.2.37",
     "vue-router": "^4.1.2",
     "vuedraggable": "^4.1.0"
@@ -55,6 +55,7 @@
     "start-server-and-test": "^1.14.0",
     "typescript": "~4.7.4",
     "vite": "^3.0.1",
+    "vite-plugin-pwa": "^0.12.3",
     "vitest": "^0.18.1",
     "vue-tsc": "^0.38.8"
   },
@@ -100,5 +101,6 @@
       "provider": "github",
       "releaseType": "release"
     }
-  }
+  },
+  "license": "MIT"
 }
