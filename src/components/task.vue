@@ -37,7 +37,7 @@ const limitText = (text: string, limit: number) => {
   >
     <div class="start">
       <h3 class="title" :title="task.title">
-        {{ task.title }}
+        {{ limitText(task.title, 40) }}
       </h3>
       <p class="description" :title="task.description">
         {{ limitText(task.description, 100) }}

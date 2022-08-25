@@ -22,6 +22,10 @@ const addSubTask = () => {
     },
   });
 };
+const auto_grow = (e) => {
+  e.target.style.height = "5px";
+  e.target.style.height = e.target.scrollHeight + "px";
+};
 
 onMounted(() => {
   // get active task by id
@@ -86,10 +90,11 @@ onMounted(() => {
               />
             </div>
             <div class="text">
-              <input
-                type="text"
+              <textarea
                 v-model="subtask.text"
                 placeholder="New note"
+                @input="auto_grow"
+                @click="auto_grow"
               />
             </div>
 
@@ -199,7 +204,7 @@ onMounted(() => {
 
         li {
           display: flex;
-          align-items: center;
+          align-items: flex-start;
           padding: 4px 6px;
           background-color: rgb(255, 255, 255);
           border-bottom: 1px solid #eee;
@@ -225,12 +230,16 @@ onMounted(() => {
             display: flex;
             margin-left: 8px;
             flex: 1;
-            input {
+
+            textarea {
               padding: 5px;
               flex: 1;
               border-color: transparent;
               background-color: transparent;
               outline: unset;
+              resize: none;
+              overflow: hidden;
+              min-height: 46px;
 
               &:focus {
                 border-color: transparent;
