@@ -6,7 +6,7 @@ export const useHomeStore = defineStore({
   state: () => ({
     user: {
       id: 1,
-      name: "Emre Yalçın",
+      name: "local",
       avatar: null
     },
     tabs: [] as Array<Project>,
