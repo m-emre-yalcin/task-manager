@@ -30,6 +30,9 @@ const barItems = ref([
       },
     ],
   },
+  {
+    name: "About",
+  },
 ]);
 
 const colorToCssVar = (colors: any) => {

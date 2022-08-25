@@ -39,7 +39,7 @@ const datalist = ref({
       colors: getThemes("p-"),
     },
     {
-      name: "Delete",
+      name: "Delete project",
       fn: () => {
         store.removeTab(actionsbox.value?.data.index);
       },
@@ -60,7 +60,7 @@ const datalist = ref({
       colors: getThemes("s-"),
     },
     {
-      name: "Delete",
+      name: "Delete section",
       icon: IconTrash,
     },
   ],
@@ -70,7 +70,7 @@ const datalist = ref({
       key: "title",
     },
     {
-      name: "Delete",
+      name: "Delete task",
       icon: IconTrash,
     },
   ],
