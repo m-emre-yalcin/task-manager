@@ -22,12 +22,12 @@ export default defineConfig({
         theme_color: primary,
         icons: [
           {
-            src: './src/assets/maskable_icon_x192.png',
+            src: 'maskable_icon_x192.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: './src/assets/maskable_icon_x512.png',
+            src: 'maskable_icon_x512.png',
             sizes: '512x512',
             type: 'image/png'
           }
@@ -45,5 +45,5 @@ export default defineConfig({
     }
   },
   base: "",
-  publicDir: "/dist/"
+  publicDir: "public"
 });
