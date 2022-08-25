@@ -75,7 +75,7 @@ const datalist = ref({
 
 // Workaround code for now
 const executeItemAction = (item: any, type: any) => {
-  if (item.name.contains("Delete")) {
+  if (item.name.includes("Delete")) {
     if (type === "project") {
       store.removeTab(actionsbox.value?.data.index);
     }
