@@ -25,6 +25,10 @@ body {
   /* background-image: url(@/assets/images/Floral-Grey-Seamless-Pattern-For-Website-Background.jpg);*/
   background-color: var(--primary-color);
 }
+::selection {
+  background-color: var(--primary-color);
+  color: white;
+}
 input,
 textarea,
 select {
