@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { useHomeStore } from "../stores/home";
 import { storeToRefs } from "pinia";
 import colors from "../assets/colors.json";
+import IconPlus from "./icons/IconPlus.vue";
 import IconDone from "./icons/IconDone.vue";
 import IconTrash from "./icons/IconTrash.vue";
 
@@ -47,6 +48,10 @@ const datalist = ref({
   ],
   section: [
     {
+      name: "Add task",
+      icon: IconPlus,
+    },
+    {
       name: "Rename",
       key: "label",
     },
@@ -88,6 +93,16 @@ const executeItemAction = (item: any, type: any) => {
     }
 
     store.closeActions();
+    return;
+  }
+
+  if (item.name === "Add task") {
+    if (type === "section") {
+      store.addTask(actionsbox.value.data.item);
+    }
+
+    store.closeActions();
+    return;
   }
 };
 </script>
@@ -108,23 +123,23 @@ const executeItemAction = (item: any, type: any) => {
     >
       <ul>
         <li
-          v-for="item in datalist[actionsbox.data.type]"
-          :key="item.name"
-          @click="executeItemAction(item, actionsbox.data.type)"
+          v-for="listItem in datalist[actionsbox.data.type]"
+          :key="listItem.name"
+          @click="executeItemAction(listItem, actionsbox.data.type)"
         >
-          <template v-if="item.key">
+          <template v-if="listItem.key">
             <input
               autofocus
               type="text"
-              v-model="actionsbox.data.item[item.key]"
+              v-model="actionsbox.data.item[listItem.key]"
               @keydown.enter="store.closeActions()"
             />
           </template>
 
-          <template v-else-if="item.colors">
+          <template v-else-if="listItem.colors">
             <ul class="colors">
               <li
-                v-for="{ key, color } in item.colors"
+                v-for="{ key, color } in listItem.colors"
                 :key="color"
                 :title="'pick ' + color"
                 :style="{ backgroundColor: color }"
@@ -133,10 +148,9 @@ const executeItemAction = (item: any, type: any) => {
               />
             </ul>
           </template>
-
           <template v-else>
-            <component :is="item.icon" />
-            <span>{{ item.name }}</span>
+            <component :is="listItem.icon" />
+            <span>{{ listItem.name }}</span>
           </template>
         </li>
       </ul>
