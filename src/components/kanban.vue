@@ -53,9 +53,8 @@ const { getActiveTab } = storeToRefs(store);
   grid-auto-columns: 270px;
   box-sizing: border-box;
   width: fit-content;
+  gap: 8px;
+  padding: 8px;
   height: 100%;
-
-  $margin: 8px;
-  $padding: 4px;
 }
 </style>

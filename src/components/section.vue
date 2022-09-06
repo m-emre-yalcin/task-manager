@@ -51,19 +51,20 @@ defineProps<{
   background-color: rgba(255, 255, 255, 1);
   border-radius: 8px;
   border: 1px solid rgb(236, 236, 236);
-  margin: 8px;
+  margin: 0;
   padding: 0;
+  overflow: hidden;
 
   .section {
     margin-top: 4px;
-    padding: 4px;
+    padding: 4px 8px;
     display: flex;
     flex-direction: column;
     gap: 6px;
     flex: 1;
     border-radius: 4px;
-    height: calc(100vh - 120px - #{8px * 2} - #{4px * 2} - 16px);
-    overflow-y: auto;
+    height: calc(100vh - 120px - #{2px * 2} - 16px);
+    overflow-y: overlay;
     overflow-x: hidden;
   }
 }

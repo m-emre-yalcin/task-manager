@@ -21,13 +21,13 @@ defineProps<{
   justify-content: center;
   align-items: center;
   gap: 8px;
-  border: 2px dashed #ccc;
+  border: 2px dashed rgba(75, 11, 49, 0.156);
   border-radius: 8px;
   cursor: pointer;
-  margin: 8px;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.313);
   &:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.521);
+    border: 2px dashed rgba(75, 11, 49, 0.532);
   }
 
   span {

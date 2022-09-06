@@ -35,8 +35,8 @@ const themeColor = computed(() => {
 <style lang="scss" scoped>
 main {
   overflow: auto;
-  height: calc(100vh - 80px);
   background-color: var(--kanban-bg-color);
   transition: background-color 0.25s ease;
+  height: calc(100vh - 78px);
 }
 </style>

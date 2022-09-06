@@ -24,7 +24,7 @@ defineProps<{
 header.head {
   height: 40px;
   box-shadow: 0 2px 2px rgb(236, 236, 236);
-  padding: 4px;
+  padding: 4px 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
