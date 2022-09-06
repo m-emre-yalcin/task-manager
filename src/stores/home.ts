@@ -67,7 +67,7 @@ export const useHomeStore = defineStore({
     },
     addTask(section: Section) {
       if (this.getActiveTab) {
-        section.tasks.push({
+        section.tasks.unshift({
           id: Date.now(),
           title: "New task",
           completed: false,
